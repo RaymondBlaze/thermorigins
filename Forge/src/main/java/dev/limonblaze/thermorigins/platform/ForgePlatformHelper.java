@@ -3,7 +3,7 @@ package dev.limonblaze.thermorigins.platform;
 import dev.limonblaze.thermorigins.data.MultiloaderDataTypes;
 import dev.limonblaze.thermorigins.platform.services.IPlatformHelper;
 import dev.limonblaze.thermorigins.power.data.IPowerData;
-import dev.limonblaze.thermorigins.registry.PowerFactoriesForge;
+import dev.limonblaze.thermorigins.registry.ThermoPowersForge;
 import com.google.auto.service.AutoService;
 import io.github.apace100.apoli.power.Power;
 import io.github.apace100.apoli.power.PowerType;
@@ -23,26 +23,23 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public String getPlatformName() {
-
         return "Forge";
     }
 
     @Override
     public boolean isModLoaded(String modId) {
-
         return ModList.get().isLoaded(modId);
     }
 
     @Override
     public boolean isDevelopmentEnvironment() {
-
         return !FMLLoader.isProduction();
     }
 
     @Override
-    public <P extends Power> PowerFactory<P> registerPowerFactory(ResourceLocation id, IPowerData power) {
+    public <P extends Power> PowerFactory<P> registerPowerFactory(ResourceLocation id, IPowerData<P> power) {
         PowerFactory<P> powerFactory = new PowerFactory<>(id, power.getSerializableData(), power.getPowerConstructorForge());
-        PowerFactoriesForge.POWER_FACTORY_REGISTRY.register(id.getPath(), powerFactory::getWrapped);
+        ThermoPowersForge.REGISTRY.register(id.getPath(), powerFactory::getWrapped);
         return powerFactory;
     }
 
@@ -110,4 +107,5 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public SerializableDataType<?> getItemActionDataType() {
         return MultiloaderDataTypes.ITEM_ACTION.get();
     }
+    
 }

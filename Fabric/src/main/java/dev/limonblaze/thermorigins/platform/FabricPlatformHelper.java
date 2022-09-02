@@ -21,24 +21,21 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public String getPlatformName() {
-
         return "Fabric";
     }
 
     @Override
     public boolean isModLoaded(String modId) {
-
         return FabricLoader.getInstance().isModLoaded(modId);
     }
 
     @Override
     public boolean isDevelopmentEnvironment() {
-
         return FabricLoader.getInstance().isDevelopmentEnvironment();
     }
 
     @Override
-    public <P extends Power> PowerFactory<P> registerPowerFactory(ResourceLocation id, IPowerData power) {
+    public <P extends Power> PowerFactory<P> registerPowerFactory(ResourceLocation id, IPowerData<P> power) {
         return Registry.register(ApoliRegistries.POWER_FACTORY, id, power.createFabricFactory(id));
     }
 
@@ -106,4 +103,5 @@ public class FabricPlatformHelper implements IPlatformHelper {
     public SerializableDataType<?> getItemActionDataType() {
         return ApoliDataTypes.ITEM_ACTION;
     }
+    
 }

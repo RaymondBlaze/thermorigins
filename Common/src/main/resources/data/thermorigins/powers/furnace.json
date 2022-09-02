@@ -1,0 +1,7 @@
+{
+  "type": "thermorigins:furnace",
+  "furnace_type": "blast_furnace",
+  "key": {
+    "key": "key.origins.primary_active"
+  }
+}

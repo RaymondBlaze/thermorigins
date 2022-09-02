@@ -38,7 +38,7 @@ public interface IPlatformHelper {
      *
      * @return The registered power
      */
-    <P extends Power> PowerFactory<P> registerPowerFactory(ResourceLocation id, IPowerData power);
+    <P extends Power> PowerFactory<P> registerPowerFactory(ResourceLocation id, IPowerData<P> power);
 
     <P extends Power> List<P> getPowers(LivingEntity entity, Class<P> powerClass, PowerFactory<P> powerFactory);
 
@@ -65,4 +65,5 @@ public interface IPlatformHelper {
     SerializableDataType<?> getEntityActionDataType();
 
     SerializableDataType<?> getItemActionDataType();
+    
 }

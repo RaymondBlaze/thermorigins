@@ -34,7 +34,6 @@ public class FabricRegistrationFactory implements RegistrationProvider.Factory {
         private final Set<RegistryObject<T>> entries = new HashSet<>();
         private final Set<RegistryObject<T>> entriesView = Collections.unmodifiableSet(entries);
 
-        @SuppressWarnings({"unchecked"})
         private Provider(String modId, ResourceKey<? extends Registry<T>> key) {
             this.modId = modId;
 
@@ -51,7 +50,6 @@ public class FabricRegistrationFactory implements RegistrationProvider.Factory {
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public <I extends T> RegistryObject<I> register(String name, Supplier<? extends I> supplier) {
             final var rl = new ResourceLocation(modId, name);
             final var obj = Registry.register(registry, rl, supplier.get());
