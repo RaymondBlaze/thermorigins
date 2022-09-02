@@ -1,38 +1,37 @@
 {
-    "schemaVersion": 1,
-    "id": "originsmultiloader",
-    "version": "${version}",
-  
-    "name": "Example Mod",
-    "description": "This is an example description! Tell everyone what your mod is about!",
-    "authors": [
-      "Me!"
-    ],
-    "contact": {
-      "homepage": "https://fabricmc.net/",
-      "sources": "https://github.com/FabricMC/fabric-example-mod"
-    },
-  
-    "license": "CC0-1.0",
-    "icon": "assets/modid/icon.png",
-  
-    "environment": "*",
-    "entrypoints": {
-      "main": [
-        "com.example.examplemod.ExampleMod"
-      ]
-    },
-    "mixins": [
-      "originsmultiloader.mixins.json",
-      "originsmultiloader.fabric.mixins.json"
-    ],
-  
-    "depends": {
-      "fabricloader": ">=0.13",
-      "fabric": "*",
-      "minecraft": "1.18.x",
-      "origins": ">=1.4.1",
-      "java": ">=17"
-    }
+  "schemaVersion": 1,
+  "id": "thermorigins",
+  "version": "${version}",
+
+  "name": "Thermorigins",
+  "description": "A Fabric add-on for the Origins mod",
+  "authors": [
+    "LimonBlaze"
+  ],
+  "contact": {
+    "sources": "https://github.com/LimonBlaze/thermorigins"
+  },
+
+  "license": "MIT",
+  "icon": "pack.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.limonblaze.thermorigins.ThermoriginsFabric"
+    ]
+  },
+  "mixins": [
+    "thermorigins.mixins.json",
+    "thermorigins.fabric.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.13",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "origins": ">=1.4.1",
+    "java": ">=17"
   }
+}
   

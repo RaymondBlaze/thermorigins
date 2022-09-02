@@ -13,5 +13,5 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'Origins-MultiLoader'
+rootProject.name = 'thermorigins'
 include("Common", "Fabric", "Forge")
