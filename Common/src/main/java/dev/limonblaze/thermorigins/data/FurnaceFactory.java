@@ -1,5 +1,6 @@
 package dev.limonblaze.thermorigins.data;
 
+import dev.limonblaze.thermorigins.platform.Services;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -28,28 +29,43 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.Locale;
 
-public enum Furnace {
-    FURNACE(RecipeType.SMELTING, FurnaceMenu::new),
-    BLAST_FURNACE(RecipeType.BLASTING, BlastFurnaceMenu::new),
-    SMOKER(RecipeType.SMOKING, SmokerMenu::new);
+public enum FurnaceFactory {
+    FURNACE(RecipeType.SMELTING) {
+        @Override
+        public AbstractFurnaceMenu createMenu(int syncId, Inventory inventory, Container container, ContainerData containerData) {
+            return new FurnaceMenu(syncId, inventory, container, containerData);
+        }
+    },
+    BLAST_FURNACE(RecipeType.BLASTING) {
+        @Override
+        public AbstractFurnaceMenu createMenu(int syncId, Inventory inventory, Container container, ContainerData containerData) {
+            return new BlastFurnaceMenu(syncId, inventory, container, containerData);
+        }
+    },
+    SMOKER(RecipeType.SMOKING) {
+        @Override
+        public AbstractFurnaceMenu createMenu(int syncId, Inventory inventory, Container container, ContainerData containerData) {
+            return new SmokerMenu(syncId, inventory, container, containerData);
+        }
+    };
     
     public final String defaultName;
     public final RecipeType<? extends AbstractCookingRecipe> recipeType;
-    public final MenuFactory menuFactory;
     
-    Furnace(RecipeType<? extends AbstractCookingRecipe> recipeType, MenuFactory menuFactory) {
+    FurnaceFactory(RecipeType<? extends AbstractCookingRecipe> recipeType) {
         this.defaultName = "container." + name().toLowerCase(Locale.ROOT);
         this.recipeType = recipeType;
-        this.menuFactory = menuFactory;
     }
     
-    public interface MenuFactory {
-        AbstractFurnaceMenu create(int syncId, Inventory inventory, Container container, ContainerData containerData);
+    public Instance createInstance(@Nullable String name) {
+        return new Instance(name);
     }
+    
+    public abstract AbstractFurnaceMenu createMenu(int syncId, Inventory inventory, Container container, ContainerData containerData);
     
     @MethodsReturnNonnullByDefault
     @ParametersAreNonnullByDefault
-    public abstract class Instance implements Container, MenuProvider {
+    public class Instance implements Container, MenuProvider {
         private final TranslatableComponent name;
         private final NonNullList<ItemStack> items;
         private final ContainerData data;
@@ -60,6 +76,7 @@ public enum Furnace {
         private int litDuration;
         private int cookingProgress;
         private int cookingTotalTime;
+        private boolean changed;
         
         public Instance(@Nullable String name) {
             this.items = NonNullList.withSize(3, ItemStack.EMPTY);
@@ -98,7 +115,7 @@ public enum Furnace {
         
         @Override
         public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
-            return menuFactory.create(syncId, inventory, this, data);
+            return FurnaceFactory.this.createMenu(syncId, inventory, this, data);
         }
     
         public void fromTag(CompoundTag tag) {
@@ -118,10 +135,9 @@ public enum Furnace {
             tag.putFloat("Experience", xp);
         }
         
-        public void tick(LivingEntity entity) {
+        public boolean tick(LivingEntity entity) {
             this.entity = entity;
             this.level = entity.level;
-            boolean changed = false;
             if(isLit()) {
                 --litTime;
                 changed = true;
@@ -165,18 +181,21 @@ public enum Furnace {
                                 }
                             }
                         }
+                        return true;
                     }
                 } else {
                     cookingProgress = 0;
                 }
             }
-            if(changed) this.setChanged();
+            return false;
         }
         
-        protected abstract int getBurnTime(ItemStack stack);
+        private int getBurnTime(ItemStack stack) {
+            return Services.PLATFORM.getBurnTimeForFuel(stack, recipeType);
+        }
         
         private int getScaledBurnTime(ItemStack stack) {
-            return switch(Furnace.this) {
+            return switch(FurnaceFactory.this) {
                 case BLAST_FURNACE, SMOKER -> getBurnTime(stack) / 2;
                 default -> getBurnTime(stack);
             };
@@ -237,6 +256,17 @@ public enum Furnace {
                 .orElse(200);
         }
         
+        public boolean getChanged() {
+            boolean changed = this.changed;
+            this.changed = false;
+            return changed;
+        }
+    
+        @Override
+        public void setChanged() {
+            this.changed = true;
+        }
+    
         public int getContainerSize() {
             return this.items.size();
         }

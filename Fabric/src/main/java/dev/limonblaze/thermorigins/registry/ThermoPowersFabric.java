@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class ThermoPowersFabric {
     public static final RegistrationProvider<PowerFactory> REGISTRY = RegistrationProvider.get(ApoliRegistries.POWER_FACTORY, Thermorigins.ID);
     
-    public static final RegistryObject<PowerFactory<FurnacePower>> FURNACE = register("furnace", FurnacePower::createFactory);
+    public static final RegistryObject<PowerFactory<FurnacePower>> FURNACE_RESOURCE = register("furnace_resource", FurnacePower::createFactory);
     
     private static <P extends Power> RegistryObject<PowerFactory<P>> register(String name, Function<ResourceLocation, PowerFactory<P>> factory) {
         return REGISTRY.register(name, () -> factory.apply(Thermorigins.asResource(name)));

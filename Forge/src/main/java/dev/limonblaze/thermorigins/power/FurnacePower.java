@@ -2,7 +2,7 @@ package dev.limonblaze.thermorigins.power;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.limonblaze.thermorigins.data.Furnace;
+import dev.limonblaze.thermorigins.data.FurnaceFactory;
 import dev.limonblaze.thermorigins.data.ThermoDataTypes;
 import dev.limonblaze.thermorigins.util.ActionConditionUtil;
 import io.github.edwinmindcraft.apoli.api.ApoliAPI;
@@ -10,6 +10,7 @@ import io.github.edwinmindcraft.apoli.api.IDynamicFeatureConfiguration;
 import io.github.edwinmindcraft.apoli.api.component.IPowerContainer;
 import io.github.edwinmindcraft.apoli.api.power.IActivePower;
 import io.github.edwinmindcraft.apoli.api.power.IInventoryPower;
+import io.github.edwinmindcraft.apoli.api.power.configuration.ConfiguredEntityAction;
 import io.github.edwinmindcraft.apoli.api.power.configuration.ConfiguredItemCondition;
 import io.github.edwinmindcraft.apoli.api.power.configuration.ConfiguredPower;
 import io.github.edwinmindcraft.apoli.api.power.factory.PowerFactory;
@@ -22,8 +23,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuConstructor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraftforge.common.ForgeHooks;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -32,8 +31,8 @@ import java.util.Optional;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class FurnacePower extends PowerFactory<FurnacePower.Configuration> implements
-    IInventoryPower<FurnacePower.Configuration>,
-    IActivePower<FurnacePower.Configuration>
+    IActivePower<FurnacePower.Configuration>,
+    IInventoryPower<FurnacePower.Configuration>
 {
     public static final Codec<Configuration> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         ThermoDataTypes.FURNACE.fieldOf("furnace_type")
@@ -44,9 +43,15 @@ public class FurnacePower extends PowerFactory<FurnacePower.Configuration> imple
             .forGetter(Configuration::dropOnDeath),
         ConfiguredItemCondition.optional("drop_on_death_filter")
             .forGetter(Configuration::dropFilter),
+        ConfiguredEntityAction.optional("active_action")
+            .forGetter(Configuration::activeAction),
+        ConfiguredEntityAction.optional("idle_action")
+            .forGetter(Configuration::idleAction),
         CalioCodecHelper.optionalField(IActivePower.Key.BACKWARD_COMPATIBLE_CODEC, "key", IActivePower.Key.PRIMARY)
             .forGetter(Configuration::key)
-    ).apply(instance, ((furnace, title, drop, filter, key) -> new Configuration(furnace, title.orElse(null), drop, filter, key))));
+    ).apply(instance, (furnace, title, drop, filter, activeAction, idleAction, key) ->
+        new Configuration(furnace, title.orElse(null), drop, filter, activeAction, idleAction, key)
+    ));
     
     public FurnacePower() {
         super(CODEC);
@@ -78,46 +83,19 @@ public class FurnacePower extends PowerFactory<FurnacePower.Configuration> imple
     }
     
     @Override
-    public Furnace.Instance getInventory(ConfiguredPower<Configuration, ?> power, Entity entity) {
+    public FurnaceFactory.Instance getInventory(ConfiguredPower<Configuration, ?> power, Entity entity) {
         Configuration config = power.getConfiguration();
-        return power.getPowerData(entity, () -> config.furnace.new Instance(config.title) {
-            @Override
-            public void setChanged() {
-                ApoliAPI.synchronizePowerContainer(entity);
-            }
-    
-            @Override
-            protected int getBurnTime(ItemStack stack) {
-                return ForgeHooks.getBurnTime(stack, config.furnace.recipeType);
-            }
-        });
+        return power.getPowerData(entity, () -> config.furnace.createInstance(config.title));
     }
     
-    public Furnace.Instance getInventory(ConfiguredPower<Configuration, ?> power, IPowerContainer container) {
+    public FurnaceFactory.Instance getInventory(ConfiguredPower<Configuration, ?> power, IPowerContainer container) {
         Configuration config = power.getConfiguration();
-        return power.getPowerData(container, () -> config.furnace.new Instance(config.title) {
-            @Override
-            public void setChanged() {
-                container.sync();
-            }
-    
-            @Override
-            protected int getBurnTime(ItemStack stack) {
-                return ForgeHooks.getBurnTime(stack, config.furnace.recipeType);
-            }
-        });
+        return power.getPowerData(container, () -> config.furnace.createInstance(config.title));
     }
     
     @Override
     public MenuConstructor getMenuCreator(ConfiguredPower<Configuration, ?> power, Entity entity) {
         return getInventory(power, entity);
-    }
-    
-    @Override
-    public void tick(ConfiguredPower<Configuration, ?> power, Entity entity) {
-        if(!entity.level.isClientSide) {
-            getInventory(power, entity).tick((LivingEntity) entity);
-        }
     }
     
     @Override
@@ -130,10 +108,26 @@ public class FurnacePower extends PowerFactory<FurnacePower.Configuration> imple
         getInventory(power, container).toTag(tag);
     }
     
-    public record Configuration(Furnace furnace,
+    @Override
+    public void tick(ConfiguredPower<Configuration, ?> power, Entity entity) {
+        if(!entity.level.isClientSide && power.isActive(entity)) {
+            Configuration config = power.getConfiguration();
+            FurnaceFactory.Instance furnace = getInventory(power, entity);
+            if(furnace.tick((LivingEntity) entity)) {
+                ConfiguredEntityAction.execute(config.activeAction, entity);
+            } else {
+                ConfiguredEntityAction.execute(config.idleAction, entity);
+            }
+            if(furnace.getChanged()) ApoliAPI.synchronizePowerContainer(entity);
+        }
+    }
+    
+    public record Configuration(FurnaceFactory furnace,
                                 @Nullable String title,
                                 boolean dropOnDeath,
                                 Holder<ConfiguredItemCondition<?, ?>> dropFilter,
+                                Holder<ConfiguredEntityAction<?, ?>> activeAction,
+                                Holder<ConfiguredEntityAction<?, ?>> idleAction,
                                 IActivePower.Key key
     ) implements IDynamicFeatureConfiguration {}
     

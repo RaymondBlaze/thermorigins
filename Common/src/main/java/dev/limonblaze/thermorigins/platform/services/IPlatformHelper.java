@@ -6,6 +6,8 @@ import io.github.apace100.apoli.power.factory.PowerFactory;
 import io.github.apace100.calio.data.SerializableDataType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.List;
 
@@ -65,5 +67,7 @@ public interface IPlatformHelper {
     SerializableDataType<?> getEntityActionDataType();
 
     SerializableDataType<?> getItemActionDataType();
+    
+    int getBurnTimeForFuel(ItemStack stack, RecipeType<?> recipeType);
     
 }

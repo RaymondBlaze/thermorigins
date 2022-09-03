@@ -13,6 +13,9 @@ import io.github.edwinmindcraft.apoli.api.component.IPowerContainer;
 import io.github.edwinmindcraft.apoli.fabric.FabricPowerConfiguration;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
 
@@ -106,6 +109,11 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public SerializableDataType<?> getItemActionDataType() {
         return MultiloaderDataTypes.ITEM_ACTION.get();
+    }
+    
+    @Override
+    public int getBurnTimeForFuel(ItemStack stack, RecipeType<?> recipeType) {
+        return ForgeHooks.getBurnTime(stack, recipeType);
     }
     
 }

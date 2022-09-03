@@ -13,6 +13,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 
 import java.util.List;
 
@@ -102,6 +106,16 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public SerializableDataType<?> getItemActionDataType() {
         return ApoliDataTypes.ITEM_ACTION;
+    }
+    
+    @Override
+    public int getBurnTimeForFuel(ItemStack stack, RecipeType<?> recipeType) {
+        if(stack.isEmpty()) {
+            return 0;
+        } else {
+            Item item = stack.getItem();
+            return AbstractFurnaceBlockEntity.getFuel().getOrDefault(item, 0);
+        }
     }
     
 }
