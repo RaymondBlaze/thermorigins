@@ -7,6 +7,23 @@
       "type": "thermorigins:tier_harvestable",
       "tier": "minecraft:wood",
       "tier_level": 0
+    },
+    "condition": {
+      "type": "origins:and",
+      "conditions": [
+        {
+          "type": "origins:resource",
+          "resource": "*:steampowered/steam_power_resource",
+          "comparison": ">",
+          "compare_to": 0
+        },
+        {
+          "type": "origins:resource",
+          "resource": "*:steampowered/steam_power_resource",
+          "comparison": "<=",
+          "compare_to": 6000
+        }
+      ]
     }
   },
   "modify_harvest_1": {
@@ -18,10 +35,21 @@
       "tier_level": 1
     },
     "condition": {
-      "type": "origins:resource",
-      "resource": "*:steampowered/steam_power_resource",
-      "comparison": ">",
-      "compare_to": 6000
+      "type": "origins:and",
+      "conditions": [
+        {
+          "type": "origins:resource",
+          "resource": "*:steampowered/steam_power_resource",
+          "comparison": ">",
+          "compare_to": 6000
+        },
+        {
+          "type": "origins:resource",
+          "resource": "*:steampowered/steam_power_resource",
+          "comparison": "<=",
+          "compare_to": 12000
+        }
+      ]
     }
   },
   "modify_harvest_2": {
@@ -33,10 +61,21 @@
       "tier_level": 2
     },
     "condition": {
-      "type": "origins:resource",
-      "resource": "*:steampowered/steam_power_resource",
-      "comparison": ">",
-      "compare_to": 12000
+      "type": "origins:and",
+      "conditions": [
+        {
+          "type": "origins:resource",
+          "resource": "*:steampowered/steam_power_resource",
+          "comparison": ">",
+          "compare_to": 12000
+        },
+        {
+          "type": "origins:resource",
+          "resource": "*:steampowered/steam_power_resource",
+          "comparison": "<=",
+          "compare_to": 18000
+        }
+      ]
     }
   },
   "modify_harvest_3": {
@@ -48,15 +87,26 @@
       "tier_level": 3
     },
     "condition": {
-      "type": "origins:resource",
-      "resource": "*:steampowered/steam_power_resource",
-      "comparison": ">",
-      "compare_to": 18000
+      "type": "origins:and",
+      "conditions": [
+        {
+          "type": "origins:resource",
+          "resource": "*:steampowered/steam_power_resource",
+          "comparison": ">",
+          "compare_to": 18000
+        }
+      ]
     }
   },
   "modify_tool_0": {
     "type": "thermorigins:modify_tool",
-    "break_speed": 2
+    "break_speed": 2,
+    "condition": {
+      "type": "origins:resource",
+      "resource": "*:steampowered/steam_power_resource",
+      "comparison": ">",
+      "compare_to": 0
+    }
   },
   "modify_tool_1": {
     "type": "thermorigins:modify_tool",

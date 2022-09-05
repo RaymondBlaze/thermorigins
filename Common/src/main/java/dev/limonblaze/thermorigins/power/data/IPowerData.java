@@ -24,7 +24,7 @@ public interface IPowerData<P extends Power> {
     }
 
     default PowerFactory<P> createFabricFactory(ResourceLocation resourceLocation) {
-        return new PowerFactory<>(resourceLocation,
-                this.getSerializableData(), this::getPowerConstructor).allowCondition();
+        return new PowerFactory<>(resourceLocation, this.getSerializableData(), this::getPowerConstructor).allowCondition();
     }
+    
 }

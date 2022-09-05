@@ -17,7 +17,7 @@ public class InventoryMixin {
     @Shadow @Final public Player player;
     
     @Inject(method = "getDestroySpeed", at = @At("RETURN"), cancellable = true)
-    private void thermorigins$modifyDestroySpeed(BlockState state, CallbackInfoReturnable<Float> cir) {
+    private void modifyDestroySpeed(BlockState state, CallbackInfoReturnable<Float> cir) {
         cir.setReturnValue(ModifyToolPower.getBreakSpeed(player, state, cir.getReturnValue()));
     }
     

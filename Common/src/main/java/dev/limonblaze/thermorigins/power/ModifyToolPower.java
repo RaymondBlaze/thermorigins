@@ -9,7 +9,6 @@ import io.github.apace100.apoli.power.Power;
 import io.github.apace100.apoli.power.PowerType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
@@ -42,15 +41,15 @@ public class ModifyToolPower extends Power {
         this.correctToolCondition = correctToolCondition;
     }
     
-    public static float getBreakSpeed(Player player, BlockState state, float original) {
+    public static float getBreakSpeed(LivingEntity entity, BlockState state, float original) {
         BlockInWorld block = new VaguePosBlockInWorld(
-            player.level,
-            player.blockPosition(),
+            entity.level,
+            entity.blockPosition(),
             state
         );
-        Optional<Float> optional = Services.PLATFORM.getPowers(player, ModifyToolPower.class, ThermoPowers.MODIFY_TOOL)
+        Optional<Float> optional = Services.PLATFORM.getPowers(entity, ModifyToolPower.class, ThermoPowers.MODIFY_TOOL)
             .stream()
-            .filter(power -> power.isActive() && (power.breakSpeedCondition == null || power.breakSpeedCondition.test(block)))
+            .filter(power -> power.breakSpeedCondition == null || power.breakSpeedCondition.test(block))
             .map(power -> power.breakSpeed)
             .max(Comparator.naturalOrder());
         if(optional.isPresent()) {
@@ -60,15 +59,15 @@ public class ModifyToolPower extends Power {
         return original;
     }
     
-    public static boolean isCorrectTool(Player player, BlockState state) {
+    public static boolean isCorrectTool(LivingEntity entity, BlockState state) {
         BlockInWorld block = new VaguePosBlockInWorld(
-            player.level,
-            player.blockPosition(),
+            entity.level,
+            entity.blockPosition(),
             state
         );
-        return Services.PLATFORM.getPowers(player, ModifyToolPower.class, ThermoPowers.MODIFY_TOOL)
+        return Services.PLATFORM.getPowers(entity, ModifyToolPower.class, ThermoPowers.MODIFY_TOOL)
             .stream()
-            .anyMatch(power -> power.isActive() && (power.correctToolCondition == null || power.correctToolCondition.test(block)));
+            .anyMatch(power -> power.correctToolCondition == null || power.correctToolCondition.test(block));
     }
     
 }

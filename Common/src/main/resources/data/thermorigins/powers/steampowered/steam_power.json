@@ -11,18 +11,6 @@
       "bar_index": 5
     }
   },
-  "ignore_food": {
-    "type": "thermorigins:ignore_food"
-  },
-  "effect_immunity": {
-    "type": "origins:effect_immunity",
-    "effects": [
-      "minecraft:saturation",
-      "minecraft:hunger",
-      "minecraft:nausea",
-      "minecraft:poison"
-    ]
-  },
   "regeneration": {
     "type": "origins:action_over_time",
     "interval": 10,
@@ -100,6 +88,15 @@
                   "amount": 0.25
                 }
               ]
+            }
+          },
+          {
+            "condition": {
+              "type": "origins:constant",
+              "value": true
+            },
+            "action": {
+              "type": "origins:nothing"
             }
           }
         ]

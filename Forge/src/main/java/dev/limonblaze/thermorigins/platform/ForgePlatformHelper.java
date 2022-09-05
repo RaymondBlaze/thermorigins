@@ -7,7 +7,6 @@ import dev.limonblaze.thermorigins.registry.ThermoPowersForge;
 import com.google.auto.service.AutoService;
 import io.github.apace100.apoli.power.Power;
 import io.github.apace100.apoli.power.PowerType;
-import io.github.apace100.apoli.power.PowerTypeReference;
 import io.github.apace100.apoli.power.factory.PowerFactory;
 import io.github.apace100.apoli.util.ResourceOperation;
 import io.github.apace100.calio.data.SerializableDataType;
@@ -47,7 +46,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public <P extends Power> PowerFactory<P> registerPowerFactory(ResourceLocation id, IPowerData<P> power) {
-        PowerFactory<P> powerFactory = new PowerFactory<>(id, power.getSerializableData(), power.getPowerConstructorForge());
+        PowerFactory<P> powerFactory = new PowerFactory<>(id, power.getSerializableData(), power.getPowerConstructorForge()).allowCondition();
         ThermoPowersForge.REGISTRY.register(id.getPath(), powerFactory::getWrapped);
         return powerFactory;
     }

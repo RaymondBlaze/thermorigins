@@ -2,7 +2,6 @@ package dev.limonblaze.thermorigins.platform.services;
 
 import dev.limonblaze.thermorigins.power.data.IPowerData;
 import io.github.apace100.apoli.power.Power;
-import io.github.apace100.apoli.power.PowerTypeReference;
 import io.github.apace100.apoli.power.factory.PowerFactory;
 import io.github.apace100.calio.data.SerializableDataType;
 import net.minecraft.resources.ResourceLocation;

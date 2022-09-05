@@ -6,7 +6,9 @@
   "mixins": [
     "FoodDataMixin",
     "InventoryMixin",
-    "PlayerMixin"
+    "MobEffectUtilMixin",
+    "PlayerMixin",
+    "ServerLevelMixin"
   ],
   "client": [
   ],

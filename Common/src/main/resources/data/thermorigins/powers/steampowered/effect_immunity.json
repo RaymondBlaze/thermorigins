@@ -1,0 +1,12 @@
+{
+  "type": "origins:effect_immunity",
+  "hidden": true,
+  "effects": [
+    "minecraft:saturation",
+    "minecraft:hunger",
+    "minecraft:nausea",
+    "minecraft:poison",
+    "minecraft:slow_falling",
+    "minecraft:levitation"
+  ]
+}

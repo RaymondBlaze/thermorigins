@@ -1,9 +1,8 @@
 package dev.limonblaze.thermorigins.mixin;
 
-import dev.limonblaze.thermorigins.Thermorigins;
-import dev.limonblaze.thermorigins.access.FoodDataPlayerAccess;
+import dev.limonblaze.thermorigins.FoodDataPlayerAccess;
 import dev.limonblaze.thermorigins.platform.Services;
-import dev.limonblaze.thermorigins.power.IgnoreFoodPower;
+import dev.limonblaze.thermorigins.power.PreventFoodUpdatePower;
 import dev.limonblaze.thermorigins.registry.ThermoPowers;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +32,7 @@ public class FoodDataMixin {
     
     @Nullable
     private Player thermorigins$player;
-    private boolean thermorigins$ignoreFoodData;
+    private boolean thermorigins$preventFoodUpdate;
     private int thermorigins$foodLevel;
     private int thermorigins$lastFoodLevel;
     private float thermorigins$saturationLevel;
@@ -49,8 +48,9 @@ public class FoodDataMixin {
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void lockFoodData(Player player, CallbackInfo ci) {
         thermorigins$player = player;
-        boolean ignore = IgnoreFoodPower.isActive((FoodDataPlayerAccess) this);
-        if(ignore && !thermorigins$ignoreFoodData) {
+        boolean ignore = Services.PLATFORM.hasPower(player, PreventFoodUpdatePower.class, ThermoPowers.PREVENT_FOOD_UPDATE);
+        if(ignore && !thermorigins$preventFoodUpdate) {
+            thermorigins$preventFoodUpdate = true;
             thermorigins$foodLevel = foodLevel;
             thermorigins$lastFoodLevel = lastFoodLevel;
             thermorigins$saturationLevel = saturationLevel;
@@ -62,7 +62,8 @@ public class FoodDataMixin {
             exhaustionLevel = 0;
             tickTimer = 0;
             ci.cancel();
-        } else if(!ignore && thermorigins$ignoreFoodData) {
+        } else if(!ignore && thermorigins$preventFoodUpdate) {
+            thermorigins$preventFoodUpdate = false;
             foodLevel = thermorigins$foodLevel;
             lastFoodLevel = thermorigins$lastFoodLevel;
             saturationLevel = thermorigins$saturationLevel;
@@ -73,22 +74,22 @@ public class FoodDataMixin {
     
     @Inject(method = "eat(IF)V", at = @At("HEAD"), cancellable = true)
     private void preventEatNonItem(int nutrition, float saturation, CallbackInfo ci) {
-        if(IgnoreFoodPower.isActive((FoodDataPlayerAccess) this)) ci.cancel();
+        if(thermorigins$preventFoodUpdate) ci.cancel();
     }
     
     @Inject(method = "eat(Lnet/minecraft/world/item/Item;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"), cancellable = true)
     private void preventEatItem(Item item, ItemStack stack, CallbackInfo ci) {
-        if(IgnoreFoodPower.isActive((FoodDataPlayerAccess) this)) ci.cancel();
+        if(thermorigins$preventFoodUpdate) ci.cancel();
     }
     
     @Inject(method = "needsFood", at = @At("HEAD"), cancellable = true)
     private void noNeedForFood(CallbackInfoReturnable<Boolean> cir) {
-        if(IgnoreFoodPower.isActive((FoodDataPlayerAccess) this)) cir.setReturnValue(false);
+        if(thermorigins$preventFoodUpdate) cir.setReturnValue(false);
     }
     
     @Inject(method = "addExhaustion", at = @At("HEAD"), cancellable = true)
     private void preventAddExhaustion(float value, CallbackInfo ci) {
-        if(IgnoreFoodPower.isActive((FoodDataPlayerAccess) this)) {
+        if(thermorigins$preventFoodUpdate) {
             //Builtin mechanics for Steam Power
             if(Services.PLATFORM.hasPowerType(thermorigins$player, ThermoPowers.STEAM_POWER_RESOURCE)) {
                 thermorigins$steamPowerConsumption += value * 100;
@@ -104,17 +105,17 @@ public class FoodDataMixin {
     
     @Inject(method = "setFoodLevel", at = @At("HEAD"), cancellable = true)
     private void preventSetFoodLevel(int value, CallbackInfo ci) {
-        if(IgnoreFoodPower.isActive((FoodDataPlayerAccess) this)) ci.cancel();
+        if(thermorigins$preventFoodUpdate) ci.cancel();
     }
     
     @Inject(method = "setSaturation", at = @At("HEAD"), cancellable = true)
     private void preventSetSaturation(float value, CallbackInfo ci) {
-        if(IgnoreFoodPower.isActive((FoodDataPlayerAccess) this)) ci.cancel();
+        if(thermorigins$preventFoodUpdate) ci.cancel();
     }
     
     @Inject(method = "setExhaustion", at = @At("HEAD"), cancellable = true)
     private void preventSetExhaustion(float value, CallbackInfo ci) {
-        if(IgnoreFoodPower.isActive((FoodDataPlayerAccess) this)) ci.cancel();
+        if(thermorigins$preventFoodUpdate) ci.cancel();
     }
     
 }

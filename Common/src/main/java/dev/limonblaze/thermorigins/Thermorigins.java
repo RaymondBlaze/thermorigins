@@ -1,7 +1,6 @@
 package dev.limonblaze.thermorigins;
 
 import dev.limonblaze.thermorigins.platform.Services;
-import dev.limonblaze.thermorigins.registry.ThermoLootFunctions;
 import dev.limonblaze.thermorigins.registry.ThermoPowers;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;

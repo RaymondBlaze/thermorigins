@@ -7,10 +7,13 @@
   "power.thermorigins.steampowered/steam_engine.description": "你由体内的熔炉蒸汽引擎驱动。\n工作中的熔炉将水变为蒸汽，并以此推动你的活塞。\n如果你耗尽了水，那么你将会过热并开始燃烧。",
 
   "power.thermorigins.steampowered/mechanical_arms.name": "动力臂",
-  "power.thermorigins.steampowered/mechanical_arms.description": "你的双臂由金属构成，并被设计用来开掘和战斗。\n你的能量越充足，你的双臂越强劲。\n只要有足够的能量供应，你就能快速挖掘大部分方块并对敌人造成更多伤害。",
+  "power.thermorigins.steampowered/mechanical_arms.description": "你的双臂是被设计用来开掘和战斗的工具。\n你的能量越充足，你的双臂越强劲。\n只要有足够的能量供应，你就能快速挖掘大部分方块并对敌人造成更多伤害。",
+
+  "power.thermorigins.steampowered/metallic.name": "金属构造",
+  "power.thermorigins.steampowered/metallic.description": "你的金属构造赋予你天然的护甲和击退抗性。\n然而由于金属的密度，你的移动速度更慢，且不能游泳和使用鞘翅。\n事实上，你甚至对缓降和漂浮效果免疫。\n当然，金属可以传导电荷，所以你对闪电尤为脆弱且更容易成为目标。",
 
   "power.thermorigins.steampowered/non_metabolic.name": "非代谢性",
-  "power.thermorigins.steampowered/non_metabolic.description": "你的身体构造不支持正常的新陈代谢，所以你无需进食，并且对饱和，饥饿，反胃和中毒效果免疫。",
+  "power.thermorigins.steampowered/non_metabolic.description": "你的身体构造不支持正常的新陈代谢，所以你无需进食，且对饱和，饥饿，反胃和中毒效果免疫。",
 
   "badge.thermorigins.steampowered.furnace": "不在潜行状态时，按下%s来打开熔炉界面。",
   "badge.thermorigins.steampowered.power": "能量只在熔炉工作且有足量的水时产生。\n能量会逐渐被消耗，原本消耗饥饿值的行动大部分都会消耗能量。",

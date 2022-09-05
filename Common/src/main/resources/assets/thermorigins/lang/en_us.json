@@ -7,10 +7,13 @@
   "power.thermorigins.steampowered/steam_engine.description": "You're powered by a furnace-based steam engine in your body.\nThe working furnace will turn water into steam, and thus pushing your pistons to work.\nIf you ran out of water, you'll get overheated and start burning.",
 
   "power.thermorigins.steampowered/mechanical_arms.name": "Mechanical Arms",
-  "power.thermorigins.steampowered/mechanical_arms.description": "Your arms are made of metal and designed for excavation and combat.\nThe more power you have, the more powerful your arms may be.\nWith enough power supply, you can harvest most of the blocks fast with bare hands and deal more damage to enemies.",
+  "power.thermorigins.steampowered/mechanical_arms.description": "Your arms are powerful tools designed for excavation and combat.\nThe more power you have, the more powerful your arms may be.\nWith enough power supply, you can harvest most of the blocks fast with bare hands and deal more damage to enemies.",
+
+  "power.thermorigins.steampowered/metallic.name": "Metallic Structure",
+  "power.thermorigins.steampowered/metallic.description": "Your metallic structure grants you natural armor and knockback resistance.\nHowever, due to metal's density, you move slower and may not swim or use elytra.\nActually, you're even immune to slow fall and levitation.\nOf Course, metal can conduct electric charge, so you are highly vulnerable to lightning bolts and is likely to be targeted.",
 
   "power.thermorigins.steampowered/non_metabolic.name": "Non-Metabolic",
-  "power.thermorigins.steampowered/non_metabolic.description": "Your physical structure isn't supporting normal metabolism, so you don't need any food, and is immune to saturation, hunger, nausea and poison.",
+  "power.thermorigins.steampowered/non_metabolic.description": "Your physical structure isn't supporting normal metabolism, so you don't need any food or air, and is immune to saturation, hunger, nausea, poison effects.",
 
   "badge.thermorigins.steampowered.furnace": "While not sneaking, use %s to open the furnace GUI.",
   "badge.thermorigins.steampowered.power": "Power will only be generated when furnace is working and having enough water.\nPower will slowly gets consumed, most of vanilla food-consuming actions consume power.",

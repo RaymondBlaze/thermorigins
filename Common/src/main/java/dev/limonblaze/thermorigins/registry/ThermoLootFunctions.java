@@ -8,7 +8,7 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 
 public class ThermoLootFunctions {
     
-    public static LootItemFunctionType REPLACE_ITEM = register("replace_item", new ReplaceItemLootFunction.Serializer());
+    public static final LootItemFunctionType REPLACE_ITEM = register("replace_item", new ReplaceItemLootFunction.Serializer());
     
     private static LootItemFunctionType register(String name, LootItemConditionalFunction.Serializer<?> serializer) {
         return Registry.register(Registry.LOOT_FUNCTION_TYPE, Thermorigins.asResource(name), new LootItemFunctionType(serializer));

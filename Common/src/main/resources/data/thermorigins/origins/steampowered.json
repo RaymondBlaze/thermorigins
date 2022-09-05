@@ -2,9 +2,13 @@
 	"powers": [
 		"thermorigins:steampowered/steam_engine",
 		"thermorigins:steampowered/mechanical_arms",
+		"thermorigins:steampowered/metallic",
 		"thermorigins:steampowered/steam_power",
 		"thermorigins:steampowered/water_tank",
-		"thermorigins:steampowered/non_metabolic"
+		"thermorigins:steampowered/non_metabolic",
+		"thermorigins:steampowered/prevent_drowning",
+		"thermorigins:steampowered/prevent_food_update",
+		"thermorigins:steampowered/effect_immunity"
 	],
 	"icon": {
 		"item": "minecraft:furnace_minecart"

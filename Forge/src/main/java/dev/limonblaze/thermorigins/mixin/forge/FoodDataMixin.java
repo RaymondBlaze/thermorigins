@@ -1,7 +1,8 @@
 package dev.limonblaze.thermorigins.mixin.forge;
 
-import dev.limonblaze.thermorigins.access.FoodDataPlayerAccess;
-import dev.limonblaze.thermorigins.power.IgnoreFoodPower;
+import dev.limonblaze.thermorigins.FoodDataPlayerAccess;
+import dev.limonblaze.thermorigins.registry.ThermoPowers;
+import io.github.edwinmindcraft.apoli.api.component.IPowerContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.Item;
@@ -19,7 +20,9 @@ public class FoodDataMixin {
         at = @At("HEAD"), cancellable = true
     )
     private void eatItemByEntity(Item item, ItemStack stack, LivingEntity entity, CallbackInfo ci) {
-        if(IgnoreFoodPower.isActive((FoodDataPlayerAccess) this)) ci.cancel();
+        if(IPowerContainer.hasPower(((FoodDataPlayerAccess)this).getPlayer(), ThermoPowers.PREVENT_FOOD_UPDATE.getWrapped())) {
+            ci.cancel();
+        }
     }
     
 }

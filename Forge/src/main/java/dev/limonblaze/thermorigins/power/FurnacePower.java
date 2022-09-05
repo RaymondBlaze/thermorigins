@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.limonblaze.thermorigins.data.FurnaceFactory;
 import dev.limonblaze.thermorigins.data.ThermoDataTypes;
-import dev.limonblaze.thermorigins.util.ActionConditionUtil;
 import io.github.edwinmindcraft.apoli.api.ApoliAPI;
 import io.github.edwinmindcraft.apoli.api.IDynamicFeatureConfiguration;
 import io.github.edwinmindcraft.apoli.api.component.IPowerContainer;

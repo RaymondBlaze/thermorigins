@@ -1,0 +1,49 @@
+{
+  "type": "origins:multiple",
+  "attribute": {
+    "type": "origins:attribute",
+    "modifiers": [
+      {
+        "attribute": "minecraft:generic.armor",
+        "operation": "addition",
+        "value": 8
+      },
+      {
+        "attribute": "minecraft:generic.knockback_resistance",
+        "operation": "addition",
+        "value": 1
+      },
+      {
+        "attribute": "minecraft:generic.movement_speed",
+        "operation": "multiply_base",
+        "value": -0.2
+      }
+    ]
+  },
+  "modify_damage_taken": {
+    "type": "origins:modify_damage_taken",
+    "damage_condition": {
+      "type": "origins:or",
+      "conditions": [
+        {
+          "type": "origins:name",
+          "name": "lightningBolt"
+        },
+        {
+          "type": "origins:name",
+          "name": "lightningBolt.player"
+        }
+      ]
+    },
+    "modifier": {
+      "operation": "multiply_total",
+      "value": 3
+    }
+  },
+  "ignore_water": {
+    "type": "origins:ignore_water"
+  },
+  "attract_lightning": {
+    "type": "thermorigins:attract_lightning"
+  }
+}
