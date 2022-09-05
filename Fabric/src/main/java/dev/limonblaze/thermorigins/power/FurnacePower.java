@@ -25,6 +25,21 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+/**
+ * Power that grants player a workable furnace. <br>
+ * {@link FurnacePower#furnace}: A furnace instance, can have type of furnace, blast furnace and smoker. <br>
+ * {@link FurnacePower#shouldDropOnDeath}: If the contents in the furnace should drop on death. <br>
+ * {@link FurnacePower#dropOnDeathFilter}: Item Condition to check if a certain stack should drop on death. <br>
+ * {@link FurnacePower#key}: Key to open the furnace menu. <br>
+ * {@link FurnacePower#openEntityCondition}: Entity Condition to check if the player can open the furnace menu. <br>
+ * {@link FurnacePower#activeEntityAction}: Entity Action which performs every tick when the furnace is "running". <br>
+ * {@link FurnacePower#idleEntityAction}: Entity Action which performs every tick when the furnace is not "running". <br>
+ * {@link FurnacePower#smeltedEntityAction}: Entity Action which performs when the furnace smelted an item. <br>
+ * {@link FurnacePower#smeltedInputCondition}: Item Condition to check on the input item if the furnace should perform actions on smelted. <br>
+ * {@link FurnacePower#smeltedOutputCondition}: Item Condition to check on the output item if the furnace should perform actions on smelted. <br>
+ * {@link FurnacePower#smeltedOutputAction}: Item Action which performs on the output item, mostly for modify usage. <b>Don't use random-based item action, this action will be called for simulation, and mismatched results may encounter unexpected behaviors.</b> <br>
+ * @see FurnaceFactory
+ */
 @ParametersAreNonnullByDefault
 public class FurnacePower extends Power implements Active {
     private final FurnaceFactory.Instance furnace;

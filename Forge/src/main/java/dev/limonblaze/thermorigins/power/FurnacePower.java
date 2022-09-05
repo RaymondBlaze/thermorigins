@@ -28,6 +28,21 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
+/**
+ * Power that grants player a workable furnace. <br>
+ * {@link Configuration#furnace}: A furnace instance, can have type of furnace, blast furnace and smoker. <br>
+ * {@link Configuration#shouldDropOnDeath}: If the contents in the furnace should drop on death. <br>
+ * {@link Configuration#dropOnDeathFilter}: Item Condition to check if a certain stack should drop on death. <br>
+ * {@link Configuration#key}: Key to open the furnace menu. <br>
+ * {@link Configuration#openEntityCondition}: Entity Condition to check if the player can open the furnace menu. <br>
+ * {@link Configuration#activeEntityAction}: Entity Action which performs every tick when the furnace is "running". <br>
+ * {@link Configuration#idleEntityAction}: Entity Action which performs every tick when the furnace is not "running". <br>
+ * {@link Configuration#smeltedEntityAction}: Entity Action which performs when the furnace smelted an item. <br>
+ * {@link Configuration#smeltedInputCondition}: Item Condition to check on the input item if the furnace should perform actions on smelted. <br>
+ * {@link Configuration#smeltedOutputCondition}: Item Condition to check on the output item if the furnace should perform actions on smelted. <br>
+ * {@link Configuration#smeltedOutputAction}: Item Action which performs on the output item, mostly for modify usage. <b>Don't use random-based item action, this action will be called for simulation, and mismatched results may encounter unexpected behaviors.</b> <br>
+ * @see FurnaceFactory
+ */
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class FurnacePower extends PowerFactory<FurnacePower.Configuration> implements
@@ -40,9 +55,9 @@ public class FurnacePower extends PowerFactory<FurnacePower.Configuration> imple
         CalioCodecHelper.optionalField(Codec.STRING, "title")
             .forGetter(x -> Optional.ofNullable(x.title)),
         CalioCodecHelper.optionalField(CalioCodecHelper.BOOL, "drop_on_death", true)
-            .forGetter(Configuration::dropOnDeath),
+            .forGetter(Configuration::shouldDropOnDeath),
         ConfiguredItemCondition.optional("drop_on_death_filter")
-            .forGetter(Configuration::dropFilter),
+            .forGetter(Configuration::dropOnDeathFilter),
         ConfiguredEntityCondition.optional("open_entity_condition")
             .forGetter(Configuration::openEntityCondition),
         ConfiguredEntityAction.optional("active_entity_action")
@@ -90,12 +105,12 @@ public class FurnacePower extends PowerFactory<FurnacePower.Configuration> imple
     
     @Override
     public boolean shouldDropOnDeath(ConfiguredPower<Configuration, ?> power, Entity entity, ItemStack itemStack) {
-        return ConfiguredItemCondition.check(power.getConfiguration().dropFilter, entity.level, itemStack);
+        return ConfiguredItemCondition.check(power.getConfiguration().dropOnDeathFilter, entity.level, itemStack);
     }
     
     @Override
     public boolean shouldDropOnDeath(ConfiguredPower<Configuration, ?> power, Entity entity) {
-        return power.getConfiguration().dropOnDeath;
+        return power.getConfiguration().shouldDropOnDeath;
     }
     
     @Override
@@ -140,8 +155,8 @@ public class FurnacePower extends PowerFactory<FurnacePower.Configuration> imple
     
     public record Configuration(FurnaceFactory furnace,
                                 @Nullable String title,
-                                boolean dropOnDeath,
-                                Holder<ConfiguredItemCondition<?, ?>> dropFilter,
+                                boolean shouldDropOnDeath,
+                                Holder<ConfiguredItemCondition<?, ?>> dropOnDeathFilter,
                                 Holder<ConfiguredEntityCondition<?, ?>> openEntityCondition,
                                 Holder<ConfiguredEntityAction<?, ?>> activeEntityAction,
                                 Holder<ConfiguredEntityAction<?, ?>> idleEntityAction,
