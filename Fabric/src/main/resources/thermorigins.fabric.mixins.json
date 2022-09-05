@@ -4,7 +4,7 @@
   "package": "dev.limonblaze.thermorigins.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "PlayerMixin"
+    "fabric.PlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

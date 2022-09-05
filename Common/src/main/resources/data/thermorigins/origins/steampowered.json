@@ -1,0 +1,14 @@
+{
+	"powers": [
+		"thermorigins:steampowered/steam_engine",
+		"thermorigins:steampowered/mechanical_arms",
+		"thermorigins:steampowered/steam_power",
+		"thermorigins:steampowered/water_tank",
+		"thermorigins:steampowered/non_metabolic"
+	],
+	"icon": {
+		"item": "minecraft:furnace_minecart"
+	},
+	"order": -1,
+	"impact": 3
+}

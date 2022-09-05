@@ -1,0 +1,109 @@
+{
+  "type": "origins:multiple",
+  "hidden": true,
+  "resource": {
+    "type": "origins:resource",
+    "start_value": 24000,
+    "min": 0,
+    "max": 24000,
+    "hud_render": {
+      "sprite_location": "origins:textures/gui/community/huang/resource_bar_02.png",
+      "bar_index": 5
+    }
+  },
+  "ignore_food": {
+    "type": "thermorigins:ignore_food"
+  },
+  "effect_immunity": {
+    "type": "origins:effect_immunity",
+    "effects": [
+      "minecraft:saturation",
+      "minecraft:hunger",
+      "minecraft:nausea",
+      "minecraft:poison"
+    ]
+  },
+  "regeneration": {
+    "type": "origins:action_over_time",
+    "interval": 10,
+    "entity_action": {
+      "type": "origins:if_else",
+      "condition": {
+        "type": "origins:relative_health",
+        "comparison": "<",
+        "compare_to": 1
+      },
+      "if_action": {
+        "type": "origins:if_else_list",
+        "actions": [
+          {
+            "condition": {
+              "type": "origins:resource",
+              "resource": "*:*_resource",
+              "comparison": ">",
+              "compare_to": 18000
+            },
+            "action": {
+              "type": "origins:and",
+              "actions": [
+                {
+                  "type": "origins:change_resource",
+                  "resource": "*:*_resource",
+                  "change": -200
+                },
+                {
+                  "type": "origins:heal",
+                  "amount": 1
+                }
+              ]
+            }
+          },
+          {
+            "condition": {
+              "type": "origins:resource",
+              "resource": "*:*_resource",
+              "comparison": ">",
+              "compare_to": 12000
+            },
+            "action": {
+              "type": "origins:and",
+              "actions": [
+                {
+                  "type": "origins:change_resource",
+                  "resource": "*:*_resource",
+                  "change": -100
+                },
+                {
+                  "type": "origins:heal",
+                  "amount": 0.5
+                }
+              ]
+            }
+          },
+          {
+            "condition": {
+              "type": "origins:resource",
+              "resource": "*:*_resource",
+              "comparison": ">",
+              "compare_to": 6000
+            },
+            "action": {
+              "type": "origins:and",
+              "actions": [
+                {
+                  "type": "origins:change_resource",
+                  "resource": "*:*_resource",
+                  "change": -50
+                },
+                {
+                  "type": "origins:heal",
+                  "amount": 0.25
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -13,10 +13,12 @@ import io.github.apace100.calio.data.SerializableDataTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -27,25 +29,42 @@ import java.util.function.Predicate;
 public class FurnacePower extends Power implements Active {
     private final FurnaceFactory.Instance furnace;
     private final boolean shouldDropOnDeath;
-    private final Predicate<ItemStack> dropOnDeathFilter;
+    @Nullable private final Predicate<ItemStack> dropOnDeathFilter;
+    @Nullable private final Predicate<Entity> openEntityCondition;
+    @Nullable private final Consumer<Entity> activeEntityAction;
+    @Nullable private final Consumer<Entity> idleEntityAction;
+    @Nullable private final Consumer<Entity> smeltedEntityAction;
+    @Nullable private final Predicate<ItemStack> smeltedInputCondition;
+    @Nullable private final Predicate<ItemStack> smeltedOutputCondition;
+    @Nullable private final Consumer<Tuple<Level, ItemStack>> smeltedOutputAction;
     private Key key;
-    @Nullable
-    private final Consumer<Entity> activeAction;
-    @Nullable
-    private final Consumer<Entity> idleAction;
     
-    public FurnacePower(PowerType<?> type, LivingEntity entity,
-                        FurnaceFactory furnace, @Nullable String containerName,
-                        boolean shouldDropOnDeath, Predicate<ItemStack> dropOnDeathFilter,
-                        @Nullable Consumer<Entity> activeAction, @Nullable Consumer<Entity> idleAction
+    public FurnacePower(PowerType<?> type,
+                        LivingEntity entity,
+                        FurnaceFactory furnace,
+                        @Nullable String containerName,
+                        boolean shouldDropOnDeath,
+                        @Nullable Predicate<ItemStack> dropOnDeathFilter,
+                        @Nullable Predicate<Entity> openEntityCondition,
+                        @Nullable Consumer<Entity> activeAction,
+                        @Nullable Consumer<Entity> idleEntityAction,
+                        @Nullable Consumer<Entity> smeltedEntityAction,
+                        @Nullable Predicate<ItemStack> smeltedInputCondition,
+                        @Nullable Predicate<ItemStack> smeltedOutputCondition,
+                        @Nullable Consumer<Tuple<Level, ItemStack>> smeltedOutputAction
     ) {
         super(type, entity);
-        this.furnace = furnace.createInstance(containerName);
         this.shouldDropOnDeath = shouldDropOnDeath;
         this.dropOnDeathFilter = dropOnDeathFilter;
-        this.activeAction = activeAction;
-        this.idleAction = idleAction;
-        this.setTicking();
+        this.openEntityCondition = openEntityCondition;
+        this.activeEntityAction = activeAction;
+        this.idleEntityAction = idleEntityAction;
+        this.smeltedEntityAction = smeltedEntityAction;
+        this.smeltedInputCondition = smeltedInputCondition;
+        this.smeltedOutputCondition = smeltedOutputCondition;
+        this.smeltedOutputAction = smeltedOutputAction;
+        this.furnace = furnace.createInstance(containerName, this::onItemSmelted);
+        setTicking();
     }
     
     public FurnaceFactory.Instance getFurnace() {
@@ -57,7 +76,23 @@ public class FurnacePower extends Power implements Active {
     }
     
     public boolean shouldDropOnDeath(ItemStack stack) {
-        return shouldDropOnDeath && dropOnDeathFilter.test(stack);
+        return shouldDropOnDeath && (dropOnDeathFilter == null || dropOnDeathFilter.test(stack));
+    }
+    
+    public ItemStack onItemSmelted(ItemStack input, ItemStack result, LivingEntity entity, boolean simulate) {
+        if((smeltedInputCondition == null || smeltedInputCondition.test(input)) &&
+           (smeltedOutputCondition == null || smeltedOutputCondition.test(input))
+        ) {
+            if(!simulate && smeltedEntityAction != null) {
+                smeltedEntityAction.accept(entity);
+            }
+            if(smeltedOutputAction != null) {
+                ItemStack newResult = result.copy();
+                smeltedOutputAction.accept(new Tuple<>(entity.level, newResult));
+                return newResult;
+            }
+        }
+        return result;
     }
     
     @Override
@@ -72,8 +107,8 @@ public class FurnacePower extends Power implements Active {
     
     @Override
     public void onUse() {
-        if(this.isActive()) {
-            if (!this.entity.level.isClientSide && this.entity instanceof Player player) {
+        if(isActive() && (openEntityCondition == null || openEntityCondition.test(entity))) {
+            if(!entity.level.isClientSide && entity instanceof Player player) {
                 player.openMenu(furnace);
             }
         }
@@ -94,11 +129,11 @@ public class FurnacePower extends Power implements Active {
     
     @Override
     public void tick() {
-        if(!entity.level.isClientSide && this.isActive()) {
+        if(!entity.level.isClientSide && isActive()) {
             if(furnace.tick(entity)) {
-                if(activeAction != null) activeAction.accept(entity);
+                if(activeEntityAction != null) activeEntityAction.accept(entity);
             } else {
-                if(idleAction != null) idleAction.accept(entity);
+                if(idleEntityAction != null) idleEntityAction.accept(entity);
             }
             if(furnace.getChanged()) PowerHolderComponent.syncPower(entity, type);
         }
@@ -108,10 +143,15 @@ public class FurnacePower extends Power implements Active {
         return new PowerFactory<FurnacePower>(id, new SerializableData()
             .add("furnace_type", ThermoDataTypes.FURNACE)
             .add("title", SerializableDataTypes.STRING, null)
-            .add("drop_on_death", SerializableDataTypes.BOOLEAN, false)
+            .add("drop_on_death", SerializableDataTypes.BOOLEAN, true)
             .add("drop_on_death_filter", ApoliDataTypes.ITEM_CONDITION, null)
-            .add("active_action", ApoliDataTypes.ENTITY_ACTION, null)
-            .add("idle_action", ApoliDataTypes.ENTITY_ACTION, null)
+            .add("open_entity_condition", ApoliDataTypes.ENTITY_CONDITION, null)
+            .add("active_entity_action", ApoliDataTypes.ENTITY_ACTION, null)
+            .add("idle_entity_action", ApoliDataTypes.ENTITY_ACTION, null)
+            .add("smelted_entity_action", ApoliDataTypes.ENTITY_CONDITION, null)
+            .add("smelted_input_condition", ApoliDataTypes.ITEM_CONDITION, null)
+            .add("smelted_output_condition", ApoliDataTypes.ITEM_CONDITION, null)
+            .add("smelted_output_action", ApoliDataTypes.ITEM_ACTION, null)
             .add("key", ApoliDataTypes.BACKWARDS_COMPATIBLE_KEY, new Key()),
             (data) -> (type, entity) -> {
                 FurnacePower power = new FurnacePower(type, entity,
@@ -119,8 +159,13 @@ public class FurnacePower extends Power implements Active {
                     data.get("title"),
                     data.get("drop_on_death"),
                     data.get("drop_on_death_filter"),
-                    data.get("active_action"),
-                    data.get("idle_action")
+                    data.get("open_entity_condition"),
+                    data.get("active_entity_action"),
+                    data.get("idle_entity_action"),
+                    data.get("smelted_entity_action"),
+                    data.get("smelted_input_condition"),
+                    data.get("smelted_output_condition"),
+                    data.get("smelted_output_action")
                 );
                 power.setKey(data.get("key"));
                 return power;

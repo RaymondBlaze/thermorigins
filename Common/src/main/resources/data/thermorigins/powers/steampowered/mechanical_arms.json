@@ -1,0 +1,130 @@
+{
+  "type": "origins:multiple",
+  "modify_harvest_0": {
+    "type": "origins:modify_harvest",
+    "allow": true,
+    "block_condition": {
+      "type": "thermorigins:tier_harvestable",
+      "tier": "minecraft:wood",
+      "tier_level": 0
+    }
+  },
+  "modify_harvest_1": {
+    "type": "origins:modify_harvest",
+    "allow": true,
+    "block_condition": {
+      "type": "thermorigins:tier_harvestable",
+      "tier": "minecraft:stone",
+      "tier_level": 1
+    },
+    "condition": {
+      "type": "origins:resource",
+      "resource": "*:steampowered/steam_power_resource",
+      "comparison": ">",
+      "compare_to": 6000
+    }
+  },
+  "modify_harvest_2": {
+    "type": "origins:modify_harvest",
+    "allow": true,
+    "block_condition": {
+      "type": "thermorigins:tier_harvestable",
+      "tier": "minecraft:iron",
+      "tier_level": 2
+    },
+    "condition": {
+      "type": "origins:resource",
+      "resource": "*:steampowered/steam_power_resource",
+      "comparison": ">",
+      "compare_to": 12000
+    }
+  },
+  "modify_harvest_3": {
+    "type": "origins:modify_harvest",
+    "allow": true,
+    "block_condition": {
+      "type": "thermorigins:tier_harvestable",
+      "tier": "minecraft:diamond",
+      "tier_level": 3
+    },
+    "condition": {
+      "type": "origins:resource",
+      "resource": "*:steampowered/steam_power_resource",
+      "comparison": ">",
+      "compare_to": 18000
+    }
+  },
+  "modify_tool_0": {
+    "type": "thermorigins:modify_tool",
+    "break_speed": 2
+  },
+  "modify_tool_1": {
+    "type": "thermorigins:modify_tool",
+    "break_speed": 4,
+    "condition": {
+      "type": "origins:resource",
+      "resource": "*:steampowered/steam_power_resource",
+      "comparison": ">",
+      "compare_to": 6000
+    }
+  },
+  "modify_tool_2": {
+    "type": "thermorigins:modify_tool",
+    "break_speed": 6,
+    "condition": {
+      "type": "origins:resource",
+      "resource": "*:steampowered/steam_power_resource",
+      "comparison": ">",
+      "compare_to": 12000
+    }
+  },
+  "modify_tool_3": {
+    "type": "thermorigins:modify_tool",
+    "break_speed": 8,
+    "condition": {
+      "type": "origins:resource",
+      "resource": "*:steampowered/steam_power_resource",
+      "comparison": ">",
+      "compare_to": 18000
+    }
+  },
+  "modify_damage_1": {
+    "type": "origins:modify_damage_dealt",
+    "modifier": {
+      "operation": "addition",
+      "value": 1
+    },
+    "condition": {
+      "type": "origins:resource",
+      "resource": "*:steampowered/steam_power_resource",
+      "comparison": ">",
+      "compare_to": 6000
+    }
+  },
+  "modify_damage_2": {
+    "type": "origins:modify_damage_dealt",
+    "modifier": {
+      "operation": "addition",
+      "value": 1
+    },
+    "condition": {
+      "type": "origins:resource",
+      "resource": "*:steampowered/steam_power_resource",
+      "comparison": ">",
+      "compare_to": 12000
+    }
+  },
+  "modify_damage_3": {
+    "type": "origins:modify_damage_dealt",
+    "modifier": {
+      "operation": "addition",
+      "value": 1
+    },
+    "condition": {
+      "type": "origins:resource",
+      "resource": "*:steampowered/steam_power_resource",
+      "comparison": ">",
+      "compare_to": 18000
+    }
+  }
+}

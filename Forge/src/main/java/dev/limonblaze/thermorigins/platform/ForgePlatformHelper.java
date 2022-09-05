@@ -7,10 +7,16 @@ import dev.limonblaze.thermorigins.registry.ThermoPowersForge;
 import com.google.auto.service.AutoService;
 import io.github.apace100.apoli.power.Power;
 import io.github.apace100.apoli.power.PowerType;
+import io.github.apace100.apoli.power.PowerTypeReference;
 import io.github.apace100.apoli.power.factory.PowerFactory;
+import io.github.apace100.apoli.util.ResourceOperation;
 import io.github.apace100.calio.data.SerializableDataType;
 import io.github.edwinmindcraft.apoli.api.component.IPowerContainer;
+import io.github.edwinmindcraft.apoli.api.power.configuration.ConfiguredPower;
+import io.github.edwinmindcraft.apoli.common.action.configuration.ChangeResourceConfiguration;
+import io.github.edwinmindcraft.apoli.common.registry.action.ApoliEntityActions;
 import io.github.edwinmindcraft.apoli.fabric.FabricPowerConfiguration;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -54,6 +60,26 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public <P extends Power> boolean hasPower(LivingEntity living, Class<P> powerClass, PowerFactory<P> powerFactory) {
         return IPowerContainer.hasPower(living, powerFactory.getWrapped());
+    }
+    
+    @Override
+    public boolean hasPowerType(LivingEntity entity, ResourceLocation resource) {
+        return IPowerContainer.get(entity).filter(container -> {
+            ConfiguredPower<?, ?> power = container.getPower(resource);
+            return power != null && power.isActive(entity);
+        }).isPresent();
+    }
+    
+    public void changeResource(LivingEntity entity, ResourceLocation resource, int change) {
+        IPowerContainer.get(entity).ifPresent(container -> {
+            ConfiguredPower<?, ?> power = container.getPower(resource);
+            if(power != null && power.isActive(entity)) {
+                ApoliEntityActions.CHANGE_RESOURCE.get().execute(
+                    new ChangeResourceConfiguration(Holder.direct(power), change, ResourceOperation.ADD),
+                    entity
+                );
+            }
+        });
     }
 
     @Override

@@ -1,0 +1,8 @@
+[
+  {
+    "function": "thermorigins:replace_item",
+    "item": {
+      "item": "minecraft:bucket"
+    }
+  }
+]

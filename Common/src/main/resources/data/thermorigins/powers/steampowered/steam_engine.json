@@ -1,0 +1,74 @@
+{
+  "type": "thermorigins:furnace",
+  "furnace_type": "furnace",
+  "key": {
+    "key": "key.origins.primary_active"
+  },
+  "open_entity_condition": {
+    "type": "origins:sneaking",
+    "inverted": true
+  },
+  "active_entity_action": {
+    "type": "origins:if_else",
+    "condition": {
+      "type": "origins:resource",
+      "resource": "*:steampowered/water_tank_resource",
+      "comparison": ">",
+      "compare_to": 0
+    },
+    "if_action": {
+      "type": "origins:and",
+      "actions": [
+        {
+          "type": "origins:change_resource",
+          "resource": "*:steampowered/water_tank_resource",
+          "change": -1
+        },
+        {
+          "type": "origins:change_resource",
+          "resource": "*:steampowered/steam_power_resource",
+          "change": 3
+        }
+      ]
+    },
+    "else_action": {
+      "type": "origins:set_on_fire",
+      "duration": 3
+    }
+  },
+  "smelted_entity_action": {
+    "type": "origins:and",
+    "actions": [
+      {
+        "type": "origins:play_sound",
+        "sound": "minecraft:block.lava.extinguish"
+      },
+      {
+        "type": "origins:spawn_particles",
+        "particle": {
+          "type": "minecraft:cloud"
+        },
+        "count": 10,
+        "spread": {
+          "x": 0.5,
+          "y": 0.125,
+          "z": 0.5
+        }
+      }
+    ]
+  },
+  "badges": [
+    {
+      "sprite": "origins:textures/gui/badge/active.png",
+      "text":  "badge.thermorigins.steampowered.furnace"
+    },
+    {
+      "sprite": "thermorigins:textures/gui/badge/resource.png",
+      "text":  "badge.thermorigins.steampowered.power"
+    },
+    {
+      "sprite": "thermorigins:textures/gui/badge/resource.png",
+      "text":  "badge.thermorigins.steampowered.water"
+    }
+  ]
+}

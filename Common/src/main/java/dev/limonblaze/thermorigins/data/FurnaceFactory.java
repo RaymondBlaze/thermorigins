@@ -57,11 +57,18 @@ public enum FurnaceFactory {
         this.recipeType = recipeType;
     }
     
-    public Instance createInstance(@Nullable String name) {
-        return new Instance(name);
+    public Instance createInstance(@Nullable String name, ItemSmeltedCallback callback) {
+        return new Instance(name, callback);
     }
     
     public abstract AbstractFurnaceMenu createMenu(int syncId, Inventory inventory, Container container, ContainerData containerData);
+    
+    @FunctionalInterface
+    public interface ItemSmeltedCallback {
+    
+        ItemStack onItemSmelted(ItemStack input, ItemStack result, LivingEntity entity, boolean simulate);
+    
+    }
     
     @MethodsReturnNonnullByDefault
     @ParametersAreNonnullByDefault
@@ -69,6 +76,7 @@ public enum FurnaceFactory {
         private final TranslatableComponent name;
         private final NonNullList<ItemStack> items;
         private final ContainerData data;
+        private final ItemSmeltedCallback callback;
         private LivingEntity entity;
         private Level level;
         private float xp;
@@ -78,9 +86,10 @@ public enum FurnaceFactory {
         private int cookingTotalTime;
         private boolean changed;
         
-        public Instance(@Nullable String name) {
+        public Instance(@Nullable String name, ItemSmeltedCallback callback) {
             this.items = NonNullList.withSize(3, ItemStack.EMPTY);
             this.name = new TranslatableComponent(name == null ? defaultName : name);
+            this.callback = callback;
             this.data = new ContainerData() {
                 public int get(int index) {
                     return switch(index) {
@@ -206,8 +215,9 @@ public enum FurnaceFactory {
         }
         
         private boolean canBurn(@Nullable Recipe<?> recipe) {
-            if(!items.get(0).isEmpty() && recipe != null) {
-                ItemStack newResult = recipe.getResultItem();
+            ItemStack input = items.get(0);
+            if(!input.isEmpty() && recipe != null) {
+                ItemStack newResult = this.callback.onItemSmelted(input, recipe.getResultItem(), entity, true);
                 if(newResult.isEmpty()) {
                     return false;
                 } else {
@@ -230,7 +240,7 @@ public enum FurnaceFactory {
         private boolean burn(@Nullable Recipe<?> recipe) {
             if(recipe != null && canBurn(recipe)) {
                 ItemStack input = items.get(0);
-                ItemStack newResult = recipe.getResultItem();
+                ItemStack newResult = this.callback.onItemSmelted(input, recipe.getResultItem(), entity, false);
                 ItemStack existingResult = items.get(2);
                 if(existingResult.isEmpty()) {
                     items.set(2, newResult.copy());

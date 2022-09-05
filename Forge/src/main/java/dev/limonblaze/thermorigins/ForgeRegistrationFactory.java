@@ -21,10 +21,10 @@ public class ForgeRegistrationFactory implements RegistrationProvider.Factory {
     @Override
     public <T> RegistrationProvider<T> create(ResourceKey<? extends Registry<T>> resourceKey, String modId) {
         final var containerOpt = ModList.get().getModContainerById(modId);
-        if (containerOpt.isEmpty())
+        if(containerOpt.isEmpty())
             throw new NullPointerException("Cannot find mod container for id " + modId);
         final var cont = containerOpt.get();
-        if (cont instanceof FMLModContainer fmlModContainer) {
+        if(cont instanceof FMLModContainer fmlModContainer) {
             final var register = DeferredRegister.create(resourceKey, modId);
             register.register(fmlModContainer.getEventBus());
             return new Provider<>(modId, register);
@@ -51,7 +51,6 @@ public class ForgeRegistrationFactory implements RegistrationProvider.Factory {
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public <I extends T> RegistryObject<I> register(String name, Supplier<? extends I> supplier) {
             final var obj = registry.<I>register(name, supplier);
             final var ro = new RegistryObject<I>() {

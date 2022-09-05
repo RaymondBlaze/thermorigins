@@ -1,11 +1,11 @@
 package dev.limonblaze.thermorigins.platform;
 
+import com.google.auto.service.AutoService;
 import dev.limonblaze.thermorigins.platform.services.IPlatformHelper;
 import dev.limonblaze.thermorigins.power.data.IPowerData;
-import com.google.auto.service.AutoService;
 import io.github.apace100.apoli.component.PowerHolderComponent;
 import io.github.apace100.apoli.data.ApoliDataTypes;
-import io.github.apace100.apoli.power.Power;
+import io.github.apace100.apoli.power.*;
 import io.github.apace100.apoli.power.factory.PowerFactory;
 import io.github.apace100.apoli.registry.ApoliRegistries;
 import io.github.apace100.calio.data.SerializableDataType;
@@ -52,7 +52,24 @@ public class FabricPlatformHelper implements IPlatformHelper {
     public <P extends Power> boolean hasPower(LivingEntity entity, Class<P> powerClass, PowerFactory<P> powerFactory) {
         return PowerHolderComponent.hasPower(entity, powerClass);
     }
-
+    
+    @Override
+    public boolean hasPowerType(LivingEntity entity, ResourceLocation power) {
+        return new PowerTypeReference<>(power).isActive(entity);
+    }
+    
+    public void changeResource(LivingEntity entity, ResourceLocation resource, int change) {
+        PowerTypeReference<?> powerType = new PowerTypeReference<>(resource);
+        Power power = PowerHolderComponent.KEY.get(entity).getPower(powerType);
+        if(power instanceof VariableIntPower vip) {
+            vip.setValue(vip.getValue() + change);
+            PowerHolderComponent.syncPower(entity, powerType);
+        } else if(power instanceof CooldownPower cp) {
+            cp.modify(change);
+            PowerHolderComponent.syncPower(entity, powerType);
+        }
+    }
+    
     @Override
     public SerializableDataType<?> getBiEntityConditionDataType() {
         return ApoliDataTypes.BIENTITY_CONDITION;

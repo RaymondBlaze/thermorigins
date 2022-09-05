@@ -1,0 +1,71 @@
+{
+  "type": "origins:multiple",
+  "hidden": true,
+  "resource": {
+    "type": "origins:resource",
+    "start_value": 8000,
+    "min": 0,
+    "max": 8000,
+    "hud_render": {
+      "sprite_location": "origins:textures/gui/community/huang/resource_bar_01.png",
+      "bar_index": 10
+    }
+  },
+  "from_bucket": {
+    "type": "origins:active_self",
+    "entity_action": {
+      "type": "origins:and",
+      "actions": [
+        {
+          "type": "origins:change_resource",
+          "resource": "*:*_resource",
+          "change": 1000
+        },
+        {
+          "type": "origins:play_sound",
+          "sound": "minecraft:item.bucket.empty"
+        },
+        {
+          "type": "origins:equipped_item_action",
+          "equipment_slot": "mainhand",
+          "action": {
+            "type": "origins:modify",
+            "modifier": "thermorigins:empty_bucket"
+          }
+        }
+      ]
+    },
+    "condition": {
+      "type": "origins:and",
+      "conditions": [
+        {
+          "type": "origins:sneaking"
+        },
+        {
+          "type": "origins:equipped_item",
+          "equipment_slot": "mainhand",
+          "item_condition": {
+            "type": "origins:ingredient",
+            "ingredient": {
+              "item": "minecraft:water_bucket"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "from_potion": {
+    "type": "origins:action_on_item_use",
+    "entity_action": {
+      "type": "origins:change_resource",
+      "resource": "*:*_resource",
+      "change": 250
+    },
+    "item_condition": {
+      "type": "origins:ingredient",
+      "ingredient": {
+        "item": "minecraft:potion"
+      }
+    }
+  }
+}

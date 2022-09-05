@@ -10,9 +10,7 @@ import io.github.edwinmindcraft.apoli.api.IDynamicFeatureConfiguration;
 import io.github.edwinmindcraft.apoli.api.component.IPowerContainer;
 import io.github.edwinmindcraft.apoli.api.power.IActivePower;
 import io.github.edwinmindcraft.apoli.api.power.IInventoryPower;
-import io.github.edwinmindcraft.apoli.api.power.configuration.ConfiguredEntityAction;
-import io.github.edwinmindcraft.apoli.api.power.configuration.ConfiguredItemCondition;
-import io.github.edwinmindcraft.apoli.api.power.configuration.ConfiguredPower;
+import io.github.edwinmindcraft.apoli.api.power.configuration.*;
 import io.github.edwinmindcraft.apoli.api.power.factory.PowerFactory;
 import io.github.edwinmindcraft.calio.api.network.CalioCodecHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -23,6 +21,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuConstructor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.apache.commons.lang3.mutable.Mutable;
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -39,18 +40,34 @@ public class FurnacePower extends PowerFactory<FurnacePower.Configuration> imple
             .forGetter(Configuration::furnace),
         CalioCodecHelper.optionalField(Codec.STRING, "title")
             .forGetter(x -> Optional.ofNullable(x.title)),
-        CalioCodecHelper.optionalField(CalioCodecHelper.BOOL, "drop_on_death", false)
+        CalioCodecHelper.optionalField(CalioCodecHelper.BOOL, "drop_on_death", true)
             .forGetter(Configuration::dropOnDeath),
         ConfiguredItemCondition.optional("drop_on_death_filter")
             .forGetter(Configuration::dropFilter),
-        ConfiguredEntityAction.optional("active_action")
-            .forGetter(Configuration::activeAction),
-        ConfiguredEntityAction.optional("idle_action")
-            .forGetter(Configuration::idleAction),
+        ConfiguredEntityCondition.optional("open_entity_condition")
+            .forGetter(Configuration::openEntityCondition),
+        ConfiguredEntityAction.optional("active_entity_action")
+            .forGetter(Configuration::activeEntityAction),
+        ConfiguredEntityAction.optional("idle_entity_action")
+            .forGetter(Configuration::idleEntityAction),
+        ConfiguredEntityAction.optional("smelted_entity_action")
+            .forGetter(Configuration::smeltedEntityAction),
+        ConfiguredItemCondition.optional("smelted_input_condition")
+            .forGetter(Configuration::smeltedInputCondition),
+        ConfiguredItemCondition.optional("smelted_output_condition")
+            .forGetter(Configuration::smeltedOutputCondition),
+        ConfiguredItemAction.optional("smelted_output_action")
+            .forGetter(Configuration::smeltedOutputAction),
         CalioCodecHelper.optionalField(IActivePower.Key.BACKWARD_COMPATIBLE_CODEC, "key", IActivePower.Key.PRIMARY)
             .forGetter(Configuration::key)
-    ).apply(instance, (furnace, title, drop, filter, activeAction, idleAction, key) ->
-        new Configuration(furnace, title.orElse(null), drop, filter, activeAction, idleAction, key)
+    ).apply(instance, (furnace, title, drop, filter,
+                       openEntityCondition, activeEntityAction, idleEntityAction,
+                       smeltedEntityAction, smeltedInputCondition, smeltedOutputCondition,
+                       smeltedOutputAction, key) ->
+        new Configuration(furnace, title.orElse(null), drop, filter,
+            openEntityCondition, activeEntityAction, idleEntityAction,
+            smeltedEntityAction, smeltedInputCondition, smeltedOutputCondition,
+            smeltedOutputAction, key)
     ));
     
     public FurnacePower() {
@@ -61,7 +78,7 @@ public class FurnacePower extends PowerFactory<FurnacePower.Configuration> imple
     @Override
     public void activate(ConfiguredPower<Configuration, ?> power, Entity entity) {
         if(!entity.level.isClientSide() && entity instanceof Player player) {
-            if(power.isActive(entity)) {
+            if(power.isActive(entity) && ConfiguredEntityCondition.check(power.getConfiguration().openEntityCondition, player)) {
                 player.openMenu(this.getInventory(power, entity));
             }
         }
@@ -74,7 +91,7 @@ public class FurnacePower extends PowerFactory<FurnacePower.Configuration> imple
     
     @Override
     public boolean shouldDropOnDeath(ConfiguredPower<Configuration, ?> power, Entity entity, ItemStack itemStack) {
-        return ActionConditionUtil.itemConditionPredicate(power.getConfiguration().dropFilter.value()).test(itemStack);
+        return ConfiguredItemCondition.check(power.getConfiguration().dropFilter, entity.level, itemStack);
     }
     
     @Override
@@ -85,12 +102,12 @@ public class FurnacePower extends PowerFactory<FurnacePower.Configuration> imple
     @Override
     public FurnaceFactory.Instance getInventory(ConfiguredPower<Configuration, ?> power, Entity entity) {
         Configuration config = power.getConfiguration();
-        return power.getPowerData(entity, () -> config.furnace.createInstance(config.title));
+        return power.getPowerData(entity, () -> config.furnace.createInstance(config.title, config::onItemSmelted));
     }
     
     public FurnaceFactory.Instance getInventory(ConfiguredPower<Configuration, ?> power, IPowerContainer container) {
         Configuration config = power.getConfiguration();
-        return power.getPowerData(container, () -> config.furnace.createInstance(config.title));
+        return power.getPowerData(container, () -> config.furnace.createInstance(config.title, config::onItemSmelted));
     }
     
     @Override
@@ -114,9 +131,9 @@ public class FurnacePower extends PowerFactory<FurnacePower.Configuration> imple
             Configuration config = power.getConfiguration();
             FurnaceFactory.Instance furnace = getInventory(power, entity);
             if(furnace.tick((LivingEntity) entity)) {
-                ConfiguredEntityAction.execute(config.activeAction, entity);
+                ConfiguredEntityAction.execute(config.activeEntityAction, entity);
             } else {
-                ConfiguredEntityAction.execute(config.idleAction, entity);
+                ConfiguredEntityAction.execute(config.idleEntityAction, entity);
             }
             if(furnace.getChanged()) ApoliAPI.synchronizePowerContainer(entity);
         }
@@ -126,9 +143,29 @@ public class FurnacePower extends PowerFactory<FurnacePower.Configuration> imple
                                 @Nullable String title,
                                 boolean dropOnDeath,
                                 Holder<ConfiguredItemCondition<?, ?>> dropFilter,
-                                Holder<ConfiguredEntityAction<?, ?>> activeAction,
-                                Holder<ConfiguredEntityAction<?, ?>> idleAction,
+                                Holder<ConfiguredEntityCondition<?, ?>> openEntityCondition,
+                                Holder<ConfiguredEntityAction<?, ?>> activeEntityAction,
+                                Holder<ConfiguredEntityAction<?, ?>> idleEntityAction,
+                                Holder<ConfiguredEntityAction<?, ?>> smeltedEntityAction,
+                                Holder<ConfiguredItemCondition<?, ?>> smeltedInputCondition,
+                                Holder<ConfiguredItemCondition<?, ?>> smeltedOutputCondition,
+                                Holder<ConfiguredItemAction<?, ?>> smeltedOutputAction,
                                 IActivePower.Key key
-    ) implements IDynamicFeatureConfiguration {}
+    ) implements IDynamicFeatureConfiguration {
+    
+        public ItemStack onItemSmelted(ItemStack input, ItemStack result, LivingEntity entity, boolean simulate) {
+            Level level = entity.level;
+            if(ConfiguredItemCondition.check(smeltedInputCondition, level, input) &&
+               ConfiguredItemCondition.check(smeltedOutputCondition, level, result)
+            ) {
+                if(!simulate) ConfiguredEntityAction.execute(smeltedEntityAction, entity);
+                Mutable<ItemStack> mutable = new MutableObject<>(result.copy());
+                ConfiguredItemAction.execute(smeltedOutputAction, level, mutable);
+                return mutable.getValue();
+            }
+            return result;
+        }
+        
+    }
     
 }

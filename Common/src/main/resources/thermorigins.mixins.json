@@ -4,6 +4,9 @@
   "package": "dev.limonblaze.thermorigins.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "FoodDataMixin",
+    "InventoryMixin",
+    "PlayerMixin"
   ],
   "client": [
   ],

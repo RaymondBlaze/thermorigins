@@ -18,7 +18,7 @@ public class PowerForgeEventHandler {
     
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onLivingDeath(LivingDeathEvent event) {
-        if (event.getEntityLiving() instanceof Player player) {
+        if(event.getEntityLiving() instanceof Player player) {
             if(!player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
                 IPowerContainer.getPowers(player, ThermoPowersForge.FURNACE.get()).forEach((inventory) -> {
                     if(inventory.getFactory().shouldDropOnDeath(inventory, player)) {
