@@ -1,6 +1,6 @@
 package dev.limonblaze.thermorigins.mixin.forge;
 
-import dev.limonblaze.thermorigins.FoodDataPlayerAccess;
+import dev.limonblaze.thermorigins.access.FoodDataPlayerAccess;
 import dev.limonblaze.thermorigins.registry.ThermoPowers;
 import io.github.edwinmindcraft.apoli.api.component.IPowerContainer;
 import net.minecraft.world.entity.LivingEntity;

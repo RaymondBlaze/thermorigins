@@ -1,4 +1,4 @@
-package dev.limonblaze.thermorigins;
+package dev.limonblaze.thermorigins.access;
 
 import net.minecraft.world.entity.player.Player;
 

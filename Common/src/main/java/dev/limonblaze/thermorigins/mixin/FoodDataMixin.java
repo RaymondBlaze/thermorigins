@@ -1,6 +1,6 @@
 package dev.limonblaze.thermorigins.mixin;
 
-import dev.limonblaze.thermorigins.FoodDataPlayerAccess;
+import dev.limonblaze.thermorigins.access.FoodDataPlayerAccess;
 import dev.limonblaze.thermorigins.platform.Services;
 import dev.limonblaze.thermorigins.power.PreventFoodUpdatePower;
 import dev.limonblaze.thermorigins.registry.ThermoPowers;
