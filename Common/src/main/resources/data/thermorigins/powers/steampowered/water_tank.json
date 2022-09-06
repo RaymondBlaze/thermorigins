@@ -3,7 +3,7 @@
   "hidden": true,
   "resource": {
     "type": "origins:resource",
-    "start_value": 8000,
+    "start_value": 4000,
     "min": 0,
     "max": 8000,
     "hud_render": {

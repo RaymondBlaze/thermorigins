@@ -144,7 +144,7 @@ public class FurnacePower extends Power implements Active {
     
     @Override
     public void tick() {
-        if(!entity.level.isClientSide && isActive()) {
+        if(!entity.level.isClientSide && entity.isAlive() && isActive()) {
             if(furnace.tick(entity)) {
                 if(activeEntityAction != null) activeEntityAction.accept(entity);
             } else {
@@ -163,7 +163,7 @@ public class FurnacePower extends Power implements Active {
             .add("open_entity_condition", ApoliDataTypes.ENTITY_CONDITION, null)
             .add("active_entity_action", ApoliDataTypes.ENTITY_ACTION, null)
             .add("idle_entity_action", ApoliDataTypes.ENTITY_ACTION, null)
-            .add("smelted_entity_action", ApoliDataTypes.ENTITY_CONDITION, null)
+            .add("smelted_entity_action", ApoliDataTypes.ENTITY_ACTION, null)
             .add("smelted_input_condition", ApoliDataTypes.ITEM_CONDITION, null)
             .add("smelted_output_condition", ApoliDataTypes.ITEM_CONDITION, null)
             .add("smelted_output_action", ApoliDataTypes.ITEM_ACTION, null)

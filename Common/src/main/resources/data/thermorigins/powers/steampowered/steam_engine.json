@@ -33,7 +33,7 @@
     },
     "else_action": {
       "type": "origins:set_on_fire",
-      "duration": 3
+      "duration": 4
     }
   },
   "smelted_entity_action": {
@@ -61,10 +61,6 @@
     {
       "sprite": "origins:textures/gui/badge/active.png",
       "text":  "badge.thermorigins.steampowered.furnace"
-    },
-    {
-      "sprite": "thermorigins:textures/gui/badge/resource.png",
-      "text":  "badge.thermorigins.steampowered.power"
     },
     {
       "sprite": "thermorigins:textures/gui/badge/resource.png",

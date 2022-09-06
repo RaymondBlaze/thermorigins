@@ -1,0 +1,21 @@
+{
+  "type": "origins:action_on_callback",
+  "hidden": true,
+  "entity_action_respawned": {
+    "type": "origins:and",
+    "actions": [
+      {
+        "type": "origins:change_resource",
+        "resource": "*:steampowered/steam_power_resource",
+        "operation": "set",
+        "change": 12000
+      },
+      {
+        "type": "origins:change_resource",
+        "resource": "*:steampowered/water_tank_resource",
+        "operation": "set",
+        "change": 4000
+      }
+    ]
+  }
+}

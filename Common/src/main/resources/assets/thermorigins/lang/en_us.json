@@ -6,16 +6,20 @@
   "power.thermorigins.steampowered/steam_engine.name": "Steam Engine",
   "power.thermorigins.steampowered/steam_engine.description": "You're powered by a furnace-based steam engine in your body.\nThe working furnace will turn water into steam, and thus pushing your pistons to work.\nIf you ran out of water, you'll get overheated and start burning.",
 
-  "power.thermorigins.steampowered/mechanical_arms.name": "Mechanical Arms",
-  "power.thermorigins.steampowered/mechanical_arms.description": "Your arms are powerful tools designed for excavation and combat.\nThe more power you have, the more powerful your arms may be.\nWith enough power supply, you can harvest most of the blocks fast with bare hands and deal more damage to enemies.",
+  "power.thermorigins.steampowered/non_metabolic.name": "Non-Metabolic",
+  "power.thermorigins.steampowered/non_metabolic.description": "Your physical structure isn't supporting normal metabolism, so you don't need any food or air, and is immune to saturation, hunger, nausea, poison effects.",
+
+  "power.thermorigins.steampowered/steam_power.name": "Power Driven",
+  "power.thermorigins.steampowered/steam_power.description": "You're completely power driven, which means your power will slowly gets consumed through most of vanilla food-consuming actions.\nWhen your power died out, your movement will be highly restricted.",
 
   "power.thermorigins.steampowered/metallic.name": "Metallic Structure",
   "power.thermorigins.steampowered/metallic.description": "Your metallic structure grants you natural armor and knockback resistance.\nHowever, due to metal's density, you move slower and may not swim or use elytra.\nActually, you're even immune to slow fall and levitation.\nOf Course, metal can conduct electric charge, so you are highly vulnerable to lightning bolts and is likely to be targeted.",
 
-  "power.thermorigins.steampowered/non_metabolic.name": "Non-Metabolic",
-  "power.thermorigins.steampowered/non_metabolic.description": "Your physical structure isn't supporting normal metabolism, so you don't need any food or air, and is immune to saturation, hunger, nausea, poison effects.",
+  "power.thermorigins.steampowered/mechanical_arms.name": "Mechanical Arms",
+  "power.thermorigins.steampowered/mechanical_arms.description": "Your arms are powerful tools designed for excavation and combat.\nThe more power you have, the more powerful your arms may be.\nWith enough power supply, you can harvest most of the blocks fast with bare hands and deal more damage to enemies.",
 
-  "badge.thermorigins.steampowered.furnace": "While not sneaking, use %s to open the furnace GUI.",
-  "badge.thermorigins.steampowered.power": "Power will only be generated when furnace is working and having enough water.\nPower will slowly gets consumed, most of vanilla food-consuming actions consume power.",
-  "badge.thermorigins.steampowered.water": "While sneaking, use %s to gain water from the water bucket held in your main hand.\nDrinking potions also provides you some small amount of water."
+  "badge.thermorigins.steampowered.furnace": "While not sneaking, use§l %s §rto open the furnace GUI.",
+  "badge.thermorigins.steampowered.water": "While sneaking, use§l %s §rto gain water from the water bucket held in your main hand.\n\n§7When Furnace Active:\n§28000 Maximum Water Capacity\n§c-1 Water/Tick\n\n§7When Water Bucket Used:\n§9+1000 Water\n\n§7When Potion Drank:\n§9+250 Water",
+  "badge.thermorigins.steampowered.power": "§7When Furnace Active:\n§224000 Maximum Power Capacity\n§9+3 Power/Tick\n\n§7When Power over 18000:\n§22 Health Regeneration/Second\n\n§7When Power at 0:\n§c-20% Speed\n§c-20% Jump",
+  "badge.thermorigins.steampowered.attributes": "§7When Applied:\n§9+8 Armor\n§9+100% Knockback Resistance\n§c-20% Speed\n§c+128 Lightning Attract Distance\n§c+300% Lighting Damage Taken"
 }

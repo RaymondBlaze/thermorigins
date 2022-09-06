@@ -6,16 +6,20 @@
   "power.thermorigins.steampowered/steam_engine.name": "蒸汽引擎",
   "power.thermorigins.steampowered/steam_engine.description": "你由体内的熔炉蒸汽引擎驱动。\n工作中的熔炉将水变为蒸汽，并以此推动你的活塞。\n如果你耗尽了水，那么你将会过热并开始燃烧。",
 
-  "power.thermorigins.steampowered/mechanical_arms.name": "动力臂",
-  "power.thermorigins.steampowered/mechanical_arms.description": "你的双臂是被设计用来开掘和战斗的工具。\n你的能量越充足，你的双臂越强劲。\n只要有足够的能量供应，你就能快速挖掘大部分方块并对敌人造成更多伤害。",
+  "power.thermorigins.steampowered/non_metabolic.name": "非代谢性",
+  "power.thermorigins.steampowered/non_metabolic.description": "你的身体构造不支持正常的新陈代谢，所以你无需进食与呼吸，且对饱和，饥饿，反胃和中毒效果免疫。",
+
+  "power.thermorigins.steampowered/steam_power.name": "能量驱动",
+  "power.thermorigins.steampowered/steam_power.description": "你完全由能量驱动，这意味着大部分原本消耗饥饿值的行动会消耗能量。\n当你的能量耗尽后，你的行动会高度受限。",
 
   "power.thermorigins.steampowered/metallic.name": "金属构造",
   "power.thermorigins.steampowered/metallic.description": "你的金属构造赋予你天然的护甲和击退抗性。\n然而由于金属的密度，你的移动速度更慢，且不能游泳和使用鞘翅。\n事实上，你甚至对缓降和漂浮效果免疫。\n当然，金属可以传导电荷，所以你对闪电尤为脆弱且更容易成为目标。",
 
-  "power.thermorigins.steampowered/non_metabolic.name": "非代谢性",
-  "power.thermorigins.steampowered/non_metabolic.description": "你的身体构造不支持正常的新陈代谢，所以你无需进食，且对饱和，饥饿，反胃和中毒效果免疫。",
+  "power.thermorigins.steampowered/mechanical_arms.name": "动力臂",
+  "power.thermorigins.steampowered/mechanical_arms.description": "你的双臂是被设计用来开掘和战斗的工具。\n你的能量越充足，你的双臂越强劲。\n只要有足够的能量供应，你就能快速挖掘大部分方块并对敌人造成更多伤害。",
 
-  "badge.thermorigins.steampowered.furnace": "不在潜行状态时，按下%s来打开熔炉界面。",
-  "badge.thermorigins.steampowered.power": "能量只在熔炉工作且有足量的水时产生。\n能量会逐渐被消耗，原本消耗饥饿值的行动大部分都会消耗能量。",
-  "badge.thermorigins.steampowered.water": "潜行状态时，按下%s来从主手手持的水桶中获取水。\n饮用药水也会补充少量水分。"
+  "badge.thermorigins.steampowered.furnace": "不在潜行状态时，按下§l %s §r以打开熔炉界面。",
+  "badge.thermorigins.steampowered.water": "潜行状态时，按下§l %s §r以从主手所持的水桶中获得水。\n\n§7熔炉工作时：\n§28000 最大水容量\n§c-1 水量/刻\n\n§7使用水桶后：\n§9+1000 水量\n\n§7喝下药水后：\n§9+250 水量",
+  "badge.thermorigins.steampowered.power": "§7熔炉工作时：\n§224000 最大能量容量\n§9+3 能量/刻\n\n§7能量高于18000时：\n§22 生命恢复/秒\n\n§7能量为0时：\n§c-20% 速度\n§c-20% 跳跃",
+  "badge.thermorigins.steampowered.attributes": "§7生效后：\n§9+8 盔甲\n§9+100% 击退抗性\n§c-20% 速度\n§c+128 闪电吸引距离\n§c+300% 受到闪电伤害"
 }

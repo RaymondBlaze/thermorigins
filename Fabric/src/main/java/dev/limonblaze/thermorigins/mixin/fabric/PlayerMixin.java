@@ -32,6 +32,7 @@ public abstract class PlayerMixin extends LivingEntity {
         for(FurnacePower power : PowerHolderComponent.getPowers(this, FurnacePower.class)) {
             if(power.shouldDropOnDeath()) {
                 FurnaceFactory.Instance furnace = power.getFurnace();
+                furnace.clearData();
                 for(int i = 0; i < furnace.getContainerSize(); ++i) {
                     ItemStack itemStack = furnace.getItem(i);
                     if(power.shouldDropOnDeath(itemStack)) {

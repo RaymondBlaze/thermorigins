@@ -210,6 +210,13 @@ public enum FurnaceFactory {
             };
         }
         
+        public void clearData() {
+            this.litTime = 0;
+            this.litDuration = 0;
+            this.cookingProgress = 0;
+            this.cookingTotalTime = 0;
+        }
+        
         public boolean isLit() {
             return litTime > 0;
         }

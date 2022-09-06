@@ -141,7 +141,7 @@ public class FurnacePower extends PowerFactory<FurnacePower.Configuration> imple
     
     @Override
     public void tick(ConfiguredPower<Configuration, ?> power, Entity entity) {
-        if(!entity.level.isClientSide && power.isActive(entity)) {
+        if(!entity.level.isClientSide && entity.isAlive() && power.isActive(entity)) {
             Configuration config = power.getConfiguration();
             FurnaceFactory.Instance furnace = getInventory(power, entity);
             if(furnace.tick((LivingEntity) entity)) {

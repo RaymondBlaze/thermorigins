@@ -45,5 +45,11 @@
   },
   "attract_lightning": {
     "type": "thermorigins:attract_lightning"
-  }
+  },
+  "badges": [
+    {
+      "sprite": "thermorigins:textures/gui/badge/attribute.png",
+      "text":  "badge.thermorigins.steampowered.attributes"
+    }
+  ]
 }
