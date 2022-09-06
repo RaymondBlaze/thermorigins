@@ -77,10 +77,13 @@ loom {
 
 processResources {
     from project(":Common").sourceSets.main.resources
-    inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": "${rootProject.minecraft_version}-${rootProject.version}"
+    }
+
+    filesMatching('*.mixins.json') {
+        expand "refmap_target": "${archivesBaseName}-"
     }
 }
 

@@ -33,18 +33,16 @@ repositories {
 }
 
 mixin {
-    add sourceSets.main, "${mod_id}.refmap.json"
+    add sourceSets.main, "thermorigins.refmap.json"
 
-    config "${mod_id}.mixins.json"
-    config "${mod_id}.forge.mixins.json"
+    config "thermorigins.mixins.json"
+    config "thermorigins.forge.mixins.json"
 }
 
 minecraft {
     mappings channel: 'official', version: minecraft_version
 
     if(project.hasProperty('forge_ats_enabled') && project.findProperty('forge_ats_enabled').toBoolean()) {
-        // This location is hardcoded in Forge and can not be changed.
-        // https://github.com/MinecraftForge/MinecraftForge/blob/be1698bb1554f9c8fa2f58e32b9ab70bc4385e60/fmlloader/src/main/java/net/minecraftforge/fml/loading/moddiscovery/ModFile.java#L123
         accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
         project.logger.debug('Forge Access Transformers are enabled for this project.')
     }
@@ -92,7 +90,6 @@ minecraft {
     }
 }
 
-
 sourceSets.main.resources.srcDir 'src/generated/resources'
 
 dependencies {
@@ -105,18 +102,28 @@ dependencies {
 
     compileOnly group:'com.google.auto.service', name:'auto-service', version:'1.0.1'
     annotationProcessor group:'com.google.auto.service', name:'auto-service', version:'1.0.1'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     compileOnly project(":Common")
+}
+
+processResources {
+    from project(':Common').sourceSets.main.resources
+
+    inputs.property 'version', "${rootProject.minecraft_version}-${rootProject.version}"
+
+    filesMatching('META-INF/mods.toml') {
+        expand 'version': "${rootProject.minecraft_version}-${rootProject.version}"
+    }
+
+    filesMatching('*.mixins.json') {
+        expand 'refmap_target': "${mod_id}."
+    }
 }
 
 tasks.withType(JavaCompile) {
     source(project(":Common").sourceSets.main.allSource)
 }
-
-processResources {
-    from project(":Common").sourceSets.main.resources
-}
-
 
 jar.finalizedBy('reobfJar')
 

@@ -49,20 +49,22 @@ public class FoodDataMixin {
     private void lockFoodData(Player player, CallbackInfo ci) {
         thermorigins$player = player;
         boolean ignore = Services.PLATFORM.hasPower(player, PreventFoodUpdatePower.class, ThermoPowers.PREVENT_FOOD_UPDATE);
-        if(ignore && !thermorigins$preventFoodUpdate) {
-            thermorigins$preventFoodUpdate = true;
-            thermorigins$foodLevel = foodLevel;
-            thermorigins$lastFoodLevel = lastFoodLevel;
-            thermorigins$saturationLevel = saturationLevel;
-            thermorigins$exhaustionLevel = exhaustionLevel;
-            thermorigins$tickTimer = tickTimer;
-            foodLevel = 20;
-            lastFoodLevel = 20;
-            saturationLevel = 0;
-            exhaustionLevel = 0;
-            tickTimer = 0;
+        if(ignore) {
+            if(!thermorigins$preventFoodUpdate) {
+                thermorigins$preventFoodUpdate = true;
+                thermorigins$foodLevel = foodLevel;
+                thermorigins$lastFoodLevel = lastFoodLevel;
+                thermorigins$saturationLevel = saturationLevel;
+                thermorigins$exhaustionLevel = exhaustionLevel;
+                thermorigins$tickTimer = tickTimer;
+                foodLevel = 20;
+                lastFoodLevel = 20;
+                saturationLevel = 0;
+                exhaustionLevel = 0;
+                tickTimer = 0;
+            }
             ci.cancel();
-        } else if(!ignore && thermorigins$preventFoodUpdate) {
+        } else if(thermorigins$preventFoodUpdate) {
             thermorigins$preventFoodUpdate = false;
             foodLevel = thermorigins$foodLevel;
             lastFoodLevel = thermorigins$lastFoodLevel;

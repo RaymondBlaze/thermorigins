@@ -4,7 +4,7 @@ license="MIT"
 issueTrackerURL="https://github.com/LimonBlaze/thermorigins/issues"
 [[mods]]
 modId="thermorigins"
-version="${file.jarVersion}"
+version="${version}"
 displayName="Thermorigins"
 #updateJSONURL=""
 displayURL="https://github.com/LimonBlaze/thermorigins"
@@ -31,6 +31,6 @@ A Forge add-on for the Origins mod
 [[dependencies.thermorigins]]
     modId="origins"
     mandatory=true
-    versionRange="[1.18.2-1.4,)"
+    versionRange="[1.18.2-1.5,)"
     ordering="NONE"
     side="BOTH"

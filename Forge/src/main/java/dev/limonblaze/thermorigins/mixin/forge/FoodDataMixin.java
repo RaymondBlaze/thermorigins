@@ -17,7 +17,7 @@ public class FoodDataMixin {
     
     @Inject(
         method = "eat(Lnet/minecraft/world/item/Item;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/LivingEntity;)V",
-        at = @At("HEAD"), cancellable = true
+        at = @At("HEAD"), cancellable = true, remap = false
     )
     private void eatItemByEntity(Item item, ItemStack stack, LivingEntity entity, CallbackInfo ci) {
         if(IPowerContainer.hasPower(((FoodDataPlayerAccess)this).getPlayer(), ThermoPowers.PREVENT_FOOD_UPDATE.getWrapped())) {

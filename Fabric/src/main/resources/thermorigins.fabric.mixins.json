@@ -1,12 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "dev.limonblaze.thermorigins.mixin",
+  "package": "dev.limonblaze.thermorigins.mixin.fabric",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "fabric.PlayerMixin"
+    "PlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "refmap": "${refmap_target}refmap.json"
 }
