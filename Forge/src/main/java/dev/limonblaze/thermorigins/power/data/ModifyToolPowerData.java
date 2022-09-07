@@ -15,7 +15,7 @@ public class ModifyToolPowerData implements IModifyToolPowerData {
     
     @Override
     public Function<SerializableData.Instance, BiFunction<PowerType<ModifyToolPower>, LivingEntity, ModifyToolPower>> getPowerConstructorForge() {
-        return (data) -> (type, entity) -> new ModifyToolPower(type, entity,
+        return data -> (type, entity) -> new ModifyToolPower(type, entity,
             data.getFloat("break_speed"),
             ActionConditionUtil.blockConditionPredicate(data.get("break_speed_block_condition")),
             ActionConditionUtil.blockConditionPredicate(data.get("correct_tool_block_condition"))

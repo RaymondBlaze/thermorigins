@@ -2,11 +2,8 @@ package dev.limonblaze.thermorigins.registry;
 
 import dev.limonblaze.thermorigins.Thermorigins;
 import dev.limonblaze.thermorigins.platform.Services;
-import dev.limonblaze.thermorigins.power.AttractLightningPower;
-import dev.limonblaze.thermorigins.power.PreventDrowningPower;
-import dev.limonblaze.thermorigins.power.PreventFoodUpdatePower;
-import dev.limonblaze.thermorigins.power.ModifyToolPower;
-import dev.limonblaze.thermorigins.power.data.AttractLightningPowerData;
+import dev.limonblaze.thermorigins.power.*;
+import dev.limonblaze.thermorigins.power.data.RedirectLightningPowerData;
 import dev.limonblaze.thermorigins.power.data.IPowerData;
 import dev.limonblaze.thermorigins.power.data.PreventDrowningPowerData;
 import dev.limonblaze.thermorigins.power.data.PreventFoodPowerData;
@@ -16,9 +13,11 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ThermoPowers {
     
-    public static final PowerFactory<AttractLightningPower> ATTRACT_LIGHTNING = register("attract_lightning", new AttractLightningPowerData());
+    public static final PowerFactory<RedirectLightningPower> REDIRECT_LIGHTNING = register("redirect_lightning", new RedirectLightningPowerData());
     
     public static final PowerFactory<ModifyToolPower> MODIFY_TOOL = register("modify_tool", Services.MODIFY_TOOL_POWER_DATA);
+    
+    public static final PowerFactory<ModifyPostLandActionPower> MODIFY_POST_LAND_ACTION = register("modify_post_land_action", Services.MODIFY_POST_LAND_ACTION_POWER_DATA);
     
     public static final PowerFactory<PreventFoodUpdatePower> PREVENT_FOOD_UPDATE = register("prevent_food_update", new PreventFoodPowerData());
     

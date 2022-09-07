@@ -44,7 +44,20 @@
     "type": "origins:ignore_water"
   },
   "attract_lightning": {
-    "type": "thermorigins:attract_lightning"
+    "type": "thermorigins:redirect_lightning",
+    "range": 128
+  },
+  "modify_death_sound": {
+    "type": "thermorigins:custom_death_sound",
+    "sound": "minecraft:entity.iron_golem.death"
+  },
+  "modify_footstep": {
+    "type": "thermorigins:custom_footstep",
+    "sound": "minecraft:entity.iron_golem.step"
+  },
+  "modify_hurt_sound": {
+    "type": "thermorigins:custom_hurt_sound",
+    "sound": "minecraft:entity.iron_golem.hurt"
   },
   "badges": [
     {

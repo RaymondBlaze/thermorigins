@@ -1,4 +1,4 @@
-package dev.limonblaze.thermorigins.util;
+package dev.limonblaze.thermorigins.util.level;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -7,13 +7,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 
 /**
- * A BlockInWorld impl with a determined {@linkplain BlockPos} and a vaguely defined {@linkplain BlockPos}
+ * A BlockInWorld impl with a determined {@link BlockState}.
  */
 @MethodsReturnNonnullByDefault
-public class VaguePosBlockInWorld extends BlockInWorld {
+public class SavedBlockStateInWorld extends BlockInWorld {
     private final BlockState state;
     
-    public VaguePosBlockInWorld(LevelReader level, BlockPos pos, BlockState state) {
+    public SavedBlockStateInWorld(LevelReader level, BlockPos pos, BlockState state) {
         super(level, pos, true);
         this.state = state;
     }

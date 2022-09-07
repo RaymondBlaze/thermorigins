@@ -4,8 +4,10 @@
   "package": "dev.limonblaze.thermorigins.mixin.forge",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "EntityMixin",
     "FoodDataMixin",
-    "ItemStackMixin"
+    "ItemStackMixin",
+    "LivingEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

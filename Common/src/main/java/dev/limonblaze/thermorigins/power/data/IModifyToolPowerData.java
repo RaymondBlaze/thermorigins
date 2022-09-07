@@ -9,7 +9,7 @@ public interface IModifyToolPowerData extends IPowerData<ModifyToolPower> {
     
     @Override
     default SerializableData getSerializableData() {
-        return IPowerData.super.getSerializableData()
+        return new SerializableData()
             .add("break_speed", SerializableDataTypes.FLOAT, 1.0F)
             .add("break_speed_block_condition", Services.PLATFORM.getBlockConditionDataType(), null)
             .add("correct_tool_block_condition", Services.PLATFORM.getBlockConditionDataType(), null);

@@ -4,7 +4,8 @@ import dev.limonblaze.thermorigins.mixin.InventoryMixin;
 import dev.limonblaze.thermorigins.mixin.PlayerMixin;
 import dev.limonblaze.thermorigins.platform.Services;
 import dev.limonblaze.thermorigins.registry.ThermoPowers;
-import dev.limonblaze.thermorigins.util.VaguePosBlockInWorld;
+import dev.limonblaze.thermorigins.util.level.SavedBlockStateInWorld;
+import dev.limonblaze.thermorigins.util.level.UnlocatedBlockStateInWorld;
 import io.github.apace100.apoli.power.Power;
 import io.github.apace100.apoli.power.PowerType;
 import net.minecraft.core.BlockPos;
@@ -23,7 +24,7 @@ import java.util.function.Predicate;
  * {@linkplain ModifyToolPower#breakSpeed}: The break speed to set, only the highest value of all(including original speed) will be accepted. <br>
  * {@linkplain ModifyToolPower#breakSpeedCondition}: Block Condition for modify break speed, modification will apply only when block matches condition. <br>
  * {@linkplain ModifyToolPower#correctToolCondition}: Block Condition for modify correct tool check, check result will be set to {@code true} when block matches condition. <br>
- * <b>Important</b>: Avoid using {@link BlockPos} specific block conditions in this power, because {@link VaguePosBlockInWorld} is used due to no proper access to {@link BlockPos}.
+ * <b>Important</b>: Avoid using {@link BlockPos} specific block conditions in this power, because {@link SavedBlockStateInWorld} is used due to no proper access to {@link BlockPos}.
  * @see InventoryMixin
  * @see PlayerMixin
  */
@@ -42,11 +43,7 @@ public class ModifyToolPower extends Power {
     }
     
     public static float getBreakSpeed(LivingEntity entity, BlockState state, float original) {
-        BlockInWorld block = new VaguePosBlockInWorld(
-            entity.level,
-            entity.blockPosition(),
-            state
-        );
+        BlockInWorld block = new UnlocatedBlockStateInWorld(entity.level, state);
         Optional<Float> optional = Services.PLATFORM.getPowers(entity, ModifyToolPower.class, ThermoPowers.MODIFY_TOOL)
             .stream()
             .filter(power -> power.breakSpeedCondition == null || power.breakSpeedCondition.test(block))
@@ -60,11 +57,7 @@ public class ModifyToolPower extends Power {
     }
     
     public static boolean isCorrectTool(LivingEntity entity, BlockState state) {
-        BlockInWorld block = new VaguePosBlockInWorld(
-            entity.level,
-            entity.blockPosition(),
-            state
-        );
+        BlockInWorld block = new UnlocatedBlockStateInWorld(entity.level, state);
         return Services.PLATFORM.getPowers(entity, ModifyToolPower.class, ThermoPowers.MODIFY_TOOL)
             .stream()
             .anyMatch(power -> power.correctToolCondition == null || power.correctToolCondition.test(block));
